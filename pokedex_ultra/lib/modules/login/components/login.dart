@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
+import 'package:pokedex_ultra/modules/login/bloc/login_cubit_model.dart';
 import 'package:pokedex_ultra/modules/login/components/cadastro.dart';
+import 'package:pokedex_ultra/utils/components/components.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
   static final String ROUTE = "/sign-in";
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen> {
-
-  @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        toolbarHeight: 60,
-        title: new Text("LOGIN"),
-      ),
-      body: _buildBody(),
+    return BlocBuilder<LoginCubit, LoginCubitModel>(
+      bloc: BlocProvider.of<LoginCubit>(context),
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 60,
+            title: const Text("LOGIN"),
+          ),
+          body: _buildBody(context),
+        );
+      },
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(BuildContext context) {
+
     ThemeData _mainTheme = Theme.of(context);
-    return new Container(
+    TextEditingController controllerEmail = new TextEditingController();
+
+
+    return Container(
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.all(20),
       alignment: Alignment.center,
@@ -35,39 +43,21 @@ class _SignInScreenState extends State<SignInScreen> {
           new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              new Container(
-                alignment: Alignment.centerLeft,
-                child: new TextField(
-                  decoration: new InputDecoration(label: Text("E-mail")),
-                ),
-                height: MediaQuery.of(context).size.height / 14,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: new BoxDecoration(
-                    color: _mainTheme.splashColor,
-                    border: new Border.all(width: 1),
-                    borderRadius: new BorderRadius.all(new Radius.circular(10))
-                ),
-              ),
-              new Container(height: 25),
-              new Container(
-                alignment: Alignment.centerLeft,
-                child: new TextField(
-                  decoration: new InputDecoration(label: new Text("Senha")),
-                ),
-                height: MediaQuery.of(context).size.height / 14,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: new BoxDecoration(
-                    color: _mainTheme.splashColor,
-                    border: new Border.all(width: 1),
-                    borderRadius: new BorderRadius.all(Radius.circular(10))
-                ),
-              ),
+              new PokeTextField(
+                  theme: _mainTheme,
+                  label: "E-mail",
+                  controller: controllerEmail,
+                  title: "E-mail",
+                  focusNode: new FocusNode(),
+                  keyboardType: TextInputType.text,
+                  onChange: (value) { }),
               new Container(
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 16, left: 8),
                 child: GestureDetector(
                   child: new Text("Esqueceu a senha?",
-                      style: _mainTheme.textTheme.subtitle1?.copyWith(fontSize: 18)),
+                      style: _mainTheme.textTheme.subtitle1
+                          ?.copyWith(fontSize: 18)),
                 ),
               ),
               new Container(
@@ -77,8 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: new ElevatedButton(
                   style: new ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      _mainTheme.colorScheme.secondary
-                    ),
+                        _mainTheme.colorScheme.secondary),
                   ),
                   child: new Text("Entrar", style: _mainTheme.textTheme.button),
                   onPressed: () {
@@ -90,9 +79,11 @@ class _SignInScreenState extends State<SignInScreen> {
                 alignment: Alignment.topCenter,
                 margin: const EdgeInsets.only(top: 16, left: 8),
                 child: GestureDetector(
-                  onTap: () => Navigator.of(context).pushNamed(SignUpScreen.ROUTE),
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(SignUpScreen.ROUTE),
                   child: new Text("Não possui conta? CADASTRE-SE!",
-                      style: _mainTheme.textTheme.subtitle1?.copyWith(fontSize: 18)),
+                      style: _mainTheme.textTheme.subtitle1
+                          ?.copyWith(fontSize: 18)),
                 ),
               ),
             ],
@@ -106,7 +97,7 @@ class _SignInScreenState extends State<SignInScreen> {
               new Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: new Text("Termos de Uso e Politica de Privacidade",
-                  style: _mainTheme.textTheme.subtitle1),
+                    style: _mainTheme.textTheme.subtitle1),
               )
             ],
           )

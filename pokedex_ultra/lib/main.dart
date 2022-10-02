@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
-import 'package:bloc/bloc.dart';
 import 'modules/login/components/cadastro.dart';
 import 'modules/login/components/login.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+      MultiBlocProvider(
+        providers: [
+          BlocProvider<LoginCubit>(create: (context) => LoginCubit())
+        ],
+        child: const MyApp(),
+      ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -16,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return new MaterialApp(
-      title: 'Game Masters',
+      title: 'Pokedéx Ultra',
       debugShowCheckedModeBanner: false,
       theme: MyTheme.darkTheme,
       initialRoute: SignInScreen.ROUTE,

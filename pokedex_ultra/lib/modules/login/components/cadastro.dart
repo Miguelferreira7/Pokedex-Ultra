@@ -14,14 +14,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return new Scaffold(
       appBar: new AppBar(
         toolbarHeight: 60,
-        title: new Text("CADASTRE-SE!"),
+        title: const Text("SIGN-UP!"),
       ),
       body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
-    ThemeData _mainTheme = Theme.of(context);
+    ThemeData _Theme = Theme.of(context);
     return new Container(
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.all(20),
@@ -35,32 +35,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
               new Container(
                 alignment: Alignment.centerLeft,
                 child: new TextField(
-                  decoration: new InputDecoration(label: Text("E-mail")),
+                  decoration: const InputDecoration(label: const Text("E-mail")),
                 ),
                 height: MediaQuery.of(context).size.height / 14,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: new BoxDecoration(
-                    color: _mainTheme.splashColor,
+                    color: _Theme.splashColor,
                     border: new Border.all(width: 1),
                     borderRadius: new BorderRadius.all(new Radius.circular(10))
                 ),
               ),
-              new Container(height: 25),
-              new Container(
+              Container(
                 alignment: Alignment.centerLeft,
-                child: new TextField(
-                  decoration: new InputDecoration(label: new Text("Senha")),
+                child: const TextField(
+                  decoration: const InputDecoration(label: const Text("Senha")),
                 ),
                 height: MediaQuery.of(context).size.height / 14,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: new BoxDecoration(
-                    color: _mainTheme.splashColor,
-                    border: new Border.all(width: 1),
-                    borderRadius: new BorderRadius.all(Radius.circular(10))
+                    color: _Theme.splashColor,
+                    border: Border.all(width: 1),
+                    borderRadius: const BorderRadius.all(Radius.circular(10))
                 ),
               ),
-              new Container(height: 25),
-              new Container(
+              Container(
+                margin: const EdgeInsets.only(top: 16, bottom: 16),
                 alignment: Alignment.centerLeft,
                 child: new TextField(
                   decoration: new InputDecoration(label: new Text("Confirme sua senha")),
@@ -68,7 +67,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: MediaQuery.of(context).size.height / 14,
                 width: MediaQuery.of(context).size.width * 0.9,
                 decoration: new BoxDecoration(
-                    color: _mainTheme.splashColor,
+                    color: _Theme.splashColor,
                     border: new Border.all(width: 1),
                     borderRadius: new BorderRadius.all(Radius.circular(10))
                 ),
@@ -80,10 +79,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 child: new ElevatedButton(
                   style: new ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        _mainTheme.colorScheme.secondary
+                        _Theme.colorScheme.secondary
                     ),
                   ),
-                  child: new Text("Cadastrar", style: _mainTheme.textTheme.button),
+                  child: new Text("Cadastrar", style: _Theme.textTheme.button),
                   onPressed: () {},
                 ),
               )
@@ -98,7 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               new Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: new Text("Termos de Uso e Politica de Privacidade",
-                    style: _mainTheme.textTheme.subtitle1),
+                    style: _Theme.textTheme.subtitle1),
               )
             ],
           )
