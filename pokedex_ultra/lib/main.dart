@@ -1,11 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
+import 'package:pokedex_ultra/modules/login/components/splash_screen.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
 import 'modules/login/components/cadastro.dart';
 import 'modules/login/components/login.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+  );
+
   runApp(
       MultiBlocProvider(
         providers: [
@@ -22,14 +33,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Pokedéx Ultra',
       debugShowCheckedModeBanner: false,
-      theme: MyTheme.darkTheme,
-      initialRoute: SignInScreen.ROUTE,
+      theme: MainTheme.darkTheme,
+      initialRoute: SplashScreen.ROUTE,
       routes: {
-        SignInScreen.ROUTE: (context) => new SignInScreen(),
-        SignUpScreen.ROUTE: (context) => new SignUpScreen(),
+        SplashScreen.ROUTE: (context) => const SplashScreen(),
+        SignInScreen.ROUTE: (context) => const SignInScreen(),
+        SignUpScreen.ROUTE: (context) => const SignUpScreen(),
+        HomePage.ROUTE: (context) => const HomePage(),
       },
     );
   }

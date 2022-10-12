@@ -48,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Container(
                 alignment: Alignment.centerLeft,
                 child: const TextField(
-                  decoration: const InputDecoration(label: const Text("Senha")),
+                  decoration: const InputDecoration(label: const Text("Password")),
                 ),
                 height: MediaQuery.of(context).size.height / 14,
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -61,28 +61,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Container(
                 margin: const EdgeInsets.only(top: 16, bottom: 16),
                 alignment: Alignment.centerLeft,
-                child: new TextField(
-                  decoration: new InputDecoration(label: new Text("Confirme sua senha")),
+                child: const TextField(
+                  decoration: InputDecoration(label: const Text("Confirm your password")),
                 ),
                 height: MediaQuery.of(context).size.height / 14,
                 width: MediaQuery.of(context).size.width * 0.9,
-                decoration: new BoxDecoration(
+                decoration: BoxDecoration(
                     color: _Theme.splashColor,
-                    border: new Border.all(width: 1),
-                    borderRadius: new BorderRadius.all(Radius.circular(10))
+                    border: Border.all(width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(10))
                 ),
               ),
               new Container(
                 height: MediaQuery.of(context).size.height / 13,
                 width: MediaQuery.of(context).size.width * 0.9,
                 margin: const EdgeInsets.only(top: 16),
-                child: new ElevatedButton(
-                  style: new ButtonStyle(
+                child: ElevatedButton(
+                  style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
                         _Theme.colorScheme.secondary
                     ),
                   ),
-                  child: new Text("Cadastrar", style: _Theme.textTheme.button),
+                  child: Text("SIGN-UP", style: _Theme.textTheme.button),
                   onPressed: () {},
                 ),
               )
@@ -96,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ),
               new Container(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: new Text("Termos de Uso e Politica de Privacidade",
+                child: Text("Privacy policy and use terms",
                     style: _Theme.textTheme.subtitle1),
               )
             ],

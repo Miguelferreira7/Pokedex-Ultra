@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class PokeTextField extends StatelessWidget {
 
   ThemeData theme;
-  String label;
+  String hint;
   TextEditingController controller;
   String title;
   TextInputType keyboardType;
@@ -12,7 +12,7 @@ class PokeTextField extends StatelessWidget {
 
   PokeTextField({
     required this.theme,
-    required this.label,
+    required this.hint,
     required this.controller,
     required this.title,
     required this.focusNode,
@@ -39,16 +39,18 @@ class PokeTextField extends StatelessWidget {
               keyboardType: keyboardType,
               onChanged: onChange,
               decoration: InputDecoration(
-                hintText: label,
+                hintText: title,
+              ),
+              style: TextStyle(
+                color: theme.errorColor
               ),
             ),
             height: MediaQuery.of(context).size.height / 14,
             width: MediaQuery.of(context).size.width * 0.9,
-            decoration: new BoxDecoration(
+            decoration: BoxDecoration(
                 color: theme.splashColor,
-                border: new Border.all(width: 1),
-                borderRadius:
-                const BorderRadius.all(const Radius.circular(10)))
+                border: Border.all(width: 1),
+                borderRadius: const BorderRadius.all(const Radius.circular(10)))
           ),
         ],
       ),
