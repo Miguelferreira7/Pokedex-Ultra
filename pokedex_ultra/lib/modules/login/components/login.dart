@@ -46,7 +46,6 @@ class SignInScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               new PokeTextField(
-                  theme: _mainTheme,
                   hint: "E-mail",
                   controller: _controllerEmail,
                   title: "E-mail",
@@ -55,7 +54,6 @@ class SignInScreen extends StatelessWidget {
                   onChange: (value) { }
               ),
               new PokeTextField(
-                  theme: _mainTheme,
                   hint: "Password",
                   controller: _controllerSenha,
                   title: "Password",
@@ -101,7 +99,6 @@ class SignInScreen extends StatelessWidget {
             children: [
               new Container(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Image.asset("assets/logoBranco.png", scale: 5),
               ),
               new Container(
                 padding: const EdgeInsets.only(bottom: 8),

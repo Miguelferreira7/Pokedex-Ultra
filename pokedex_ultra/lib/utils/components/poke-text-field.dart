@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class PokeTextField extends StatelessWidget {
 
-  ThemeData theme;
   String hint;
   TextEditingController controller;
   String title;
@@ -11,7 +10,6 @@ class PokeTextField extends StatelessWidget {
   ValueChanged<String> onChange;
 
   PokeTextField({
-    required this.theme,
     required this.hint,
     required this.controller,
     required this.title,
@@ -42,13 +40,13 @@ class PokeTextField extends StatelessWidget {
                 hintText: title,
               ),
               style: TextStyle(
-                color: theme.errorColor
+                color: Theme.of(context).errorColor
               ),
             ),
             height: MediaQuery.of(context).size.height / 14,
             width: MediaQuery.of(context).size.width * 0.9,
             decoration: BoxDecoration(
-                color: theme.splashColor,
+                color: Theme.of(context).splashColor,
                 border: Border.all(width: 1),
                 borderRadius: const BorderRadius.all(const Radius.circular(10)))
           ),

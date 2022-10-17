@@ -57,6 +57,21 @@ flutter:
     - assets/logopreto.png
     - assets/logoPretoInicio.png
     - assets/Pokeball.png
+    - assets/ultraball.png
+    - assets/pokedex.png
+    - assets/thunder.png
+    - assets/Lucario.png
+    - assets/charmander.png
+    - assets/bulbasaur.png
+    - assets/squirtle.png
+    - assets/chikorita.png
+    - assets/chimchar.png
+    - assets/cyndaquil.png
+    - assets/mudkip.png
+    - assets/turtwig.png
+    - assets/totodile.png
+    - assets/torchic.png
+    - assets/treecko.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

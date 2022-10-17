@@ -19,10 +19,10 @@ class MainTheme {
 
 TextTheme _textThemes() {
   return TextTheme(
-    button: TextStyle(fontSize: 18, color: Colors.black),
-    headline1: TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
-    bodyText1: TextStyle(color: Colors.white),
-    subtitle2: TextStyle(color: Colors.white),
+    button: const TextStyle(fontSize: 18, color: Colors.black),
+    headline1: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
+    bodyText1: const TextStyle(color: Colors.white),
+    subtitle2: const TextStyle(color: Colors.white),
     subtitle1: TextStyle(color: defaultContrastColor, fontSize: 16, fontWeight: FontWeight.w600),
   );
 }
@@ -35,7 +35,7 @@ InputDecorationTheme _inputDecorationTheme() {
       enabledBorder: InputBorder.none,
       focusedBorder: InputBorder.none,
       fillColor: Colors.white,
-      labelStyle: TextStyle(
+      labelStyle: const TextStyle(
         fontSize: 16,
         color: Colors.white,
         ));
@@ -44,7 +44,7 @@ InputDecorationTheme _inputDecorationTheme() {
 AppBarTheme _appBarTheme() {
   return new AppBarTheme(
       centerTitle: true,
-      titleTextStyle: TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.w400),
+      titleTextStyle: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.w400),
       backgroundColor: defaultAppBarBackgroundColor,
       elevation: 0,
       iconTheme: IconThemeData(color: defaultContrastColor),

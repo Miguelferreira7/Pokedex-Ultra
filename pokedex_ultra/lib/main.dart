@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       title: 'Pokedéx Ultra',
       debugShowCheckedModeBanner: false,
       theme: MainTheme.darkTheme,
-      initialRoute: SplashScreen.ROUTE,
+      initialRoute: SignInScreen.ROUTE,
       routes: {
         SplashScreen.ROUTE: (context) => const SplashScreen(),
         SignInScreen.ROUTE: (context) => const SignInScreen(),
