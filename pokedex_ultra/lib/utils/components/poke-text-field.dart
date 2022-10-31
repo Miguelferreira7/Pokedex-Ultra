@@ -15,7 +15,8 @@ class PokeTextField extends StatelessWidget {
     required this.title,
     required this.focusNode,
     required this.keyboardType,
-    required this.onChange});
+    required this.onChange
+  });
 
   @override
   Widget build(BuildContext context) {

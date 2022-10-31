@@ -53,9 +53,6 @@ flutter:
 
 
   assets:
-    - assets/logoBranco.png
-    - assets/logopreto.png
-    - assets/logoPretoInicio.png
     - assets/Pokeball.png
     - assets/ultraball.png
     - assets/pokedex.png
@@ -72,6 +69,7 @@ flutter:
     - assets/totodile.png
     - assets/torchic.png
     - assets/treecko.png
+    - assets/piplup.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
