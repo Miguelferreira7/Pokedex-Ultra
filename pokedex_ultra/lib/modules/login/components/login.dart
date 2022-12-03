@@ -30,7 +30,6 @@ class SignInScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context) {
-
     ThemeData _mainTheme = Theme.of(context);
     TextEditingController _controllerEmail = new TextEditingController();
     TextEditingController _controllerSenha = new TextEditingController();
@@ -76,7 +75,7 @@ class SignInScreen extends StatelessWidget {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        _mainTheme.colorScheme.secondary),
+                        _mainTheme.colorScheme.tertiary),
                   ),
                   child: Text("SIGN-IN", style: _mainTheme.textTheme.button),
                   onPressed: () {

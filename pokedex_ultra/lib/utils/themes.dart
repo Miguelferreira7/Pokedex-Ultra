@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 final Color darkDefaultBackgroundColor = const Color.fromRGBO(0, 18, 37, 1);
 final Color darkDefaultAppBarBackgroundColor = const Color.fromRGBO(0, 18, 37, 1);
-final Color darkDefaultSecundaryColor = const Color.fromRGBO(8, 51, 88, 1);
+final Color darkDefaultSecundaryColor = const Color.fromRGBO(19, 99, 165, 1);
 final Color darkDefaultContrastColor = const Color.fromRGBO(255,215,23,1);
 
 class MainTheme {
@@ -35,7 +35,7 @@ class MainTheme {
       headline1: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
       bodyText1: const TextStyle(color: Colors.white),
       subtitle2: const TextStyle(color: Colors.white),
-      subtitle1: TextStyle(color: darkDefaultContrastColor, fontSize: 16, fontWeight: FontWeight.w600),
+      subtitle1: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
     );
   }
 

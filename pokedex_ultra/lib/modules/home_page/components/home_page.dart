@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/utils/imageUtils.dart';
+import 'package:pokeapi/model/item/item.dart';
+import 'package:pokeapi/pokeapi.dart';
+import 'package:pokedex_ultra/modules/login/components/login.dart';
+import 'package:pokedex_ultra/utils/image_utils.dart';
 
 import '../bloc/pokemon_bloc.dart';
 import '../bloc/pokemon_cubit_model.dart';
@@ -15,14 +19,81 @@ class HomePage extends StatelessWidget {
     return BlocBuilder<PokemonCubit, PokemonCubitModel>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            leading: const Drawer(
-              child: const Icon(Icons.menu),
-            ),
-          ),
+          appBar: AppBar(),
+          drawer: _buildDrawer(context),
           body: _buildBody(context, state),
         );
       },
+    );
+  }
+
+  _buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
+      child: ListView(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height / 1.1,
+            margin: const EdgeInsets.only(top: 8, bottom: 8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  child: Column(
+                    children: [
+                      DrawerHeader(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              //Logo
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(color: Color.fromRGBO(243, 241, 237, 1)),
+                      ListTile(
+                        style: ListTileStyle.drawer,
+                        leading: const Icon(Icons.info_outlined),
+                        title: GestureDetector(
+                          onTap: () {},
+                          child: const Text("About Us",
+                              style: const TextStyle(color: Color.fromRGBO(243, 241, 237, 1))
+                          ),
+                        ),
+                      ),
+                      const Divider(color: Color.fromRGBO(243, 241, 237, 1)),
+                      ListTile(
+                        style: ListTileStyle.drawer,
+                        leading: const Icon(Icons.settings),
+                        title: GestureDetector(
+                          child: Text(
+                              "Settings",
+                              style: const TextStyle(color: Color.fromRGBO(243, 241, 237, 1))
+                          ),
+                        ),
+                        onTap: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.of(context).pushNamedAndRemoveUntil(
+                              SignInScreen.ROUTE, (route) => false
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(bottom: 16, right: 16),
+                  alignment: Alignment.centerRight,
+                  child: Text("Sign Out", style: Theme.of(context).textTheme.button?.copyWith(
+                    color: const Color.fromRGBO(243, 241, 237, 1)
+                  )),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -68,7 +139,7 @@ class HomePage extends StatelessWidget {
     final String pokedexTitle = 'POKÉDEX';
     final String teamsTitle = 'YOUR TEAMS';
     final String habilitiesTitle = 'ABILITIES';
-    final String itensTitle = 'ITENS';
+    final String itemsTitle = 'ITEMS';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16, top: 16),
@@ -82,9 +153,7 @@ class HomePage extends StatelessWidget {
                     context, pokedexTitle, Colors.red,
                     Image.asset(ImageUtilsSelection[ImageUtils.POKEDEX]!)
                 ),
-                onTap: () {
-                  Navigator.of(context).pushNamed(GenerationsPage.ROUTE);
-                },
+                onTap: () => _buildSelectionPokedexModal(context),
               ),
               GestureDetector(
                 child: _buildCardOption(
@@ -101,9 +170,14 @@ class HomePage extends StatelessWidget {
                 context, habilitiesTitle, theme.colorScheme.tertiary,
                 Image.asset(ImageUtilsSelection[ImageUtils.THUNDER]!),
               ),
-              _buildCardOption(
-                context, itensTitle, Colors.white30,
-                Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
+              GestureDetector(
+                child: _buildCardOption(
+                  context, itemsTitle, Colors.white30,
+                  Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
+                ),
+                onTap: () async {
+
+                },
               ),
             ],
           ),
@@ -147,7 +221,80 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildNews(BuildContext context, PokemonCubitModel state) {
+  Future<void> _buildSelectionPokedexModal(context) {
+    return showDialog(
+        context: context,
+        builder: (builder) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.zero,
+            contentPadding: EdgeInsets.zero,
+            backgroundColor: Colors.transparent,
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _buildGenerationsModal(context);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                      decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(),
+                          Container(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text("All Pokémons",
+                                style: Theme.of(context).textTheme.subtitle1
+                          ),
+                          )
+                        ],
+                      ),
+                  ),
+                ),
+                GestureDetector(
+                  child: Container(
+                    margin: const EdgeInsets.all(8),
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(),
+                        Container(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Text("Your Pokédex",
+                              style: Theme.of(context).textTheme.subtitle1
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
+  }
+
+  Future<void> _buildGenerationsModal(context) {
+    return showModalBottomSheet(context: context, builder: (builder) {
+      return new GenerationsPage();
+    });
+  }
+
+    Widget _buildNews(BuildContext context, PokemonCubitModel state) {
     Color containerBackgroundColor;
 
     if (state.darkTheme == true) {

@@ -41,6 +41,7 @@ dependencies:
   flutter_easyloading: ^3.0.0
   animated_splash_screen: ^1.2.0
   flutterfire_cli: ^0.2.5
+  pokeapi: ^1.0.3
 
 
 dev_dependencies:
