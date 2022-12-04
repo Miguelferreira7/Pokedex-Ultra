@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.ROUTE: (context) => const SplashScreen(),
         SignInScreen.ROUTE: (context) => const SignInScreen(),
-        SignUpScreen.ROUTE: (context) => const SignUpScreen(),
+        SignUpScreen.ROUTE: (context) => SignUpScreen(),
         HomePage.ROUTE: (context) => const HomePage(),
       },
     );

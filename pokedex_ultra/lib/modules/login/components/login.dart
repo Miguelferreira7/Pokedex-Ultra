@@ -65,7 +65,10 @@ class SignInScreen extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 16, left: 8),
                 child: GestureDetector(
                   child: Text("Forgot the password?",
-                      style: _mainTheme.textTheme.subtitle1?.copyWith(fontSize: 18)),
+                      style: _mainTheme.textTheme.subtitle1?.copyWith(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.tertiary
+                  )),
                 ),
               ),
               new Container(
@@ -89,7 +92,10 @@ class SignInScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () => Navigator.of(context).pushNamed(SignUpScreen.ROUTE),
                   child: Text("Dont have a account? SIGN-UP!",
-                      style: _mainTheme.textTheme.subtitle1?.copyWith(fontSize: 18)),
+                      style: _mainTheme.textTheme.subtitle1?.copyWith(
+                        fontSize: 18,
+                        color: Theme.of(context).colorScheme.tertiary
+                      )),
                 ),
               ),
             ],
@@ -97,12 +103,11 @@ class SignInScreen extends StatelessWidget {
           new Column(
             children: [
               new Container(
-                padding: const EdgeInsets.only(bottom: 16),
-              ),
-              new Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: new Text("Privacy policy and use terms",
-                    style: _mainTheme.textTheme.subtitle1),
+                    style: _mainTheme.textTheme.subtitle1?.copyWith(
+                      color: Theme.of(context).colorScheme.tertiary
+                    )),
               )
             ],
           )

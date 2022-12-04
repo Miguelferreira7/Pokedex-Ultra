@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
 
 class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({Key? key}) : super(key: key);
   static final String ROUTE = "/sign-up";
+  TextEditingController _controllerUsername = new TextEditingController();
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerPassword = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +23,7 @@ class SignUpScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     ThemeData _mainTheme = Theme.of(context);
-    TextEditingController _controllerEmail = new TextEditingController();
-    TextEditingController _controllerPassword = new TextEditingController();
+
 
     return new Container(
       height: MediaQuery.of(context).size.height,
@@ -33,6 +35,14 @@ class SignUpScreen extends StatelessWidget {
           new Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              new PokeTextField(
+                  hint: "UserName",
+                  controller: _controllerUsername,
+                  title: "Insert your name",
+                  focusNode: new FocusNode(),
+                  keyboardType: TextInputType.text,
+                  onChange: (value) { }
+              ),
               new PokeTextField(
                   hint: "E-mail",
                   controller: _controllerEmail,
@@ -49,14 +59,6 @@ class SignUpScreen extends StatelessWidget {
                   keyboardType: TextInputType.text,
                   onChange: (value) { }
               ),
-              new PokeTextField(
-                  hint: "Confirm your Password",
-                  controller: _controllerPassword,
-                  title: "Confirm your Password",
-                  focusNode: new FocusNode(),
-                  keyboardType: TextInputType.text,
-                  onChange: (value) { }
-              ),
               new Container(
                 height: MediaQuery.of(context).size.height / 13,
                 width: MediaQuery.of(context).size.width * 0.9,
@@ -64,12 +66,12 @@ class SignUpScreen extends StatelessWidget {
                 child: ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        _mainTheme.colorScheme.secondary
+                        _mainTheme.colorScheme.tertiary
                     ),
                   ),
                   child: Text("SIGN-UP", style: _mainTheme.textTheme.button),
                   onPressed: () {
-                    _createNewUser(context, _controllerEmail.text, _controllerPassword.text);
+                    _createNewUser(context);
                   },
                 ),
               )
@@ -83,8 +85,10 @@ class SignUpScreen extends StatelessWidget {
               new Container(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Text(
-                    "Privacy policy and use terms",
-                    style: _mainTheme.textTheme.subtitle1
+                  "Privacy policy and use terms",
+                  style: _mainTheme.textTheme.subtitle1?.copyWith(
+                    color: Theme.of(context).colorScheme.tertiary
+                  )
                 ),
               )
             ],
@@ -94,29 +98,36 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  void _createNewUser(BuildContext context, String emailAddress, String password) async {
+  void _createNewUser(BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
+      UserCredential credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _controllerEmail.text,
+        password: _controllerPassword.text,
       );
+      await credential.user?.updateDisplayName(_controllerUsername.text);
+      await _showDialog(context, "Success!", "Your account has been successfully created.");
+
+      Navigator.of(context).pushNamedAndRemoveUntil(HomePage.ROUTE, (route) => false);
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
+        _showDialog(context, "Weak Password", "The password provided is too weak.");
+
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+        _showDialog(context, "E-mail Already In Use", "The account already exists for that email.");
       }
     } catch (e) {
       print(e);
+      _showDialog(context, "Error", "Try again");
     }
   }
 
-  Future _dialog (BuildContext context, String title, String message) {
+  Future _showDialog (BuildContext context, String title, String message) {
     return showDialog<String>(
         context: context,
         builder: (BuildContext context) => PokeDialog(
-            title: title,
-            message: message
+          title: title,
+          message: message,
         )
     );
   }

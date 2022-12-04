@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokeapi/model/item/item.dart';
-import 'package:pokeapi/pokeapi.dart';
 import 'package:pokedex_ultra/modules/login/components/login.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 
@@ -72,22 +70,24 @@ class HomePage extends StatelessWidget {
                               style: const TextStyle(color: Color.fromRGBO(243, 241, 237, 1))
                           ),
                         ),
-                        onTap: () async {
-                          await FirebaseAuth.instance.signOut();
-                          Navigator.of(context).pushNamedAndRemoveUntil(
-                              SignInScreen.ROUTE, (route) => false
-                          );
-                        },
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(bottom: 16, right: 16),
-                  alignment: Alignment.centerRight,
-                  child: Text("Sign Out", style: Theme.of(context).textTheme.button?.copyWith(
-                    color: const Color.fromRGBO(243, 241, 237, 1)
-                  )),
+                GestureDetector(
+                  onTap: () async {
+                    await FirebaseAuth.instance.signOut();
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        SignInScreen.ROUTE, (route) => false
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 16, right: 16),
+                    alignment: Alignment.centerRight,
+                    child: Text("Sign Out", style: Theme.of(context).textTheme.button?.copyWith(
+                      color: const Color.fromRGBO(243, 241, 237, 1)
+                    )),
+                  ),
                 )
               ],
             ),
@@ -127,7 +127,7 @@ class HomePage extends StatelessWidget {
       height: MediaQuery.of(context).size.height * 0.08,
       child: Container(
         child: Text(
-          "Welcome,\nUser873154",
+          "Welcome,\n${FirebaseAuth.instance.currentUser?.displayName?.toUpperCase()}!",
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
@@ -290,7 +290,7 @@ class HomePage extends StatelessWidget {
 
   Future<void> _buildGenerationsModal(context) {
     return showModalBottomSheet(context: context, builder: (builder) {
-      return new GenerationsPage();
+      return new GenerationsModal();
     });
   }
 

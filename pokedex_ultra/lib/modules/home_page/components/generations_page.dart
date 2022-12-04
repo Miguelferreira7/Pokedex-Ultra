@@ -5,8 +5,8 @@ import 'package:pokedex_ultra/modules/home_page/bloc/pokemon_cubit_model.dart';
 import 'package:pokedex_ultra/utils/generation_enum.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 
-class GenerationsPage extends StatelessWidget {
-  const GenerationsPage({Key? key}) : super(key: key);
+class GenerationsModal extends StatelessWidget {
+  const GenerationsModal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +17,7 @@ class GenerationsPage extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8),
           color: Theme.of(context).colorScheme.background,
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _buildTitle(context),
               _buildOptions(context),
@@ -79,7 +80,7 @@ class GenerationsPage extends StatelessWidget {
 
     return GestureDetector(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.09,
+        height: MediaQuery.of(context).size.height * 0.08,
         margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.secondary,
@@ -124,13 +125,13 @@ class GenerationsPage extends StatelessWidget {
     return new Container(
       height: 32,
       width: MediaQuery.of(context).size.width * 0.9,
-      margin: const EdgeInsets.only(top: 8),
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all<Color>(
               Theme.of(context).colorScheme.tertiary),
         ),
-        child: Text("CANCEL", style: Theme.of(context).textTheme.button),
+        child: Text("Cancel", style: Theme.of(context).textTheme.button),
         onPressed: () => Navigator.of(context).pop(),
       ),
     );
