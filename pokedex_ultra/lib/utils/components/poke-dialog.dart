@@ -19,27 +19,27 @@ class PokeDialog extends StatelessWidget {
       margin: const EdgeInsets.only(left: 8, right: 16),
       child: AlertDialog(
         backgroundColor: _theme.colorScheme.secondary,
-        titleTextStyle: _theme.textTheme.headline1?.copyWith(color: Colors.black),
-        contentTextStyle: _theme.textTheme.subtitle1?.copyWith(color: Colors.black),
-        contentPadding: const EdgeInsets.all(16),
+        titleTextStyle: _theme.textTheme.headline1,
+        contentTextStyle: _theme.textTheme.subtitle1,
+        contentPadding: const EdgeInsets.only(bottom: 8, top: 16, left: 16, right: 16),
         alignment: Alignment.centerRight,
         actionsAlignment: MainAxisAlignment.center,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
         title: Center(
             child: Text(title, textAlign: TextAlign.center)
         ),
-        content: Text( message, textAlign: TextAlign.center,),
+        content: Text(message, textAlign: TextAlign.center),
         actions: [
           Column(
             children: [
-              Divider(color: _theme.colorScheme.background),
+              Divider(color: Colors.grey),
               TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                   child: Text(
                     "OK",
-                    style: _theme.textTheme.button,
+                    style: _theme.textTheme.subtitle1,
                   )
               ),
             ],

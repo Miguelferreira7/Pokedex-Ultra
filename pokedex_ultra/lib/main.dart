@@ -7,8 +7,8 @@ import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/components/splash_screen.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
 import 'modules/home_page/bloc/pokemon_bloc.dart';
-import 'modules/login/components/cadastro.dart';
-import 'modules/login/components/login.dart';
+import 'modules/login/components/sign-up-screen.dart';
+import 'modules/login/components/sign-in-screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.ROUTE,
       routes: {
         SplashScreen.ROUTE: (context) => const SplashScreen(),
-        SignInScreen.ROUTE: (context) => const SignInScreen(),
+        SignInScreen.ROUTE: (context) => SignInScreen(),
         SignUpScreen.ROUTE: (context) => SignUpScreen(),
         HomePage.ROUTE: (context) => const HomePage(),
       },

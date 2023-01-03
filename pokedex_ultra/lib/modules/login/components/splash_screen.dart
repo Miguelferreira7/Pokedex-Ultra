@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/modules/login/components/login.dart';
+import 'package:pokedex_ultra/modules/login/components/sign-in-screen.dart';
 import '../../home_page/components/home_page.dart';
 
 class SplashScreen extends StatefulWidget {

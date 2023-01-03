@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/modules/login/components/login.dart';
+import 'package:pokeapi/model/game/pokedex.dart';
+import 'package:pokeapi/model/pokemon/pokemon.dart';
+import 'package:pokeapi/pokeapi.dart';
+import 'package:pokedex_ultra/modules/login/components/sign-in-screen.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 
 import '../bloc/pokemon_bloc.dart';
@@ -176,7 +179,6 @@ class HomePage extends StatelessWidget {
                   Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
                 ),
                 onTap: () async {
-
                 },
               ),
             ],

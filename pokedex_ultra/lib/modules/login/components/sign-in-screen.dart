@@ -5,12 +5,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_cubit_model.dart';
-import 'package:pokedex_ultra/modules/login/components/cadastro.dart';
+import 'package:pokedex_ultra/modules/login/components/sign-up-screen.dart';
+import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key}) : super(key: key);
   static final String ROUTE = "/sign-in";
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerPassword = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,6 @@ class SignInScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     ThemeData _mainTheme = Theme.of(context);
-    TextEditingController _controllerEmail = new TextEditingController();
-    TextEditingController _controllerSenha = new TextEditingController();
 
     return Container(
       height: MediaQuery.of(context).size.height,
@@ -54,7 +54,7 @@ class SignInScreen extends StatelessWidget {
               ),
               new PokeTextField(
                   hint: "Password",
-                  controller: _controllerSenha,
+                  controller: _controllerPassword,
                   title: "Password",
                   focusNode: new FocusNode(),
                   keyboardType: TextInputType.text,
@@ -76,14 +76,13 @@ class SignInScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.9,
                 margin: const EdgeInsets.only(top: 16),
                 child: ElevatedButton(
+                  onPressed: _validateUser(context, _controllerEmail.text, _controllerPassword.text),
+                  child: Text("SIGN-IN", style: _mainTheme.textTheme.button),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                        _mainTheme.colorScheme.tertiary),
+                        _mainTheme.colorScheme.tertiary
+                    ),
                   ),
-                  child: Text("SIGN-IN", style: _mainTheme.textTheme.button),
-                  onPressed: () {
-                    _validateUser(context, _controllerEmail.text, _controllerSenha.text);
-                  },
                 ),
               ),
               Container(
@@ -116,23 +115,48 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  void _validateUser(BuildContext context, String emailAddress, String password) async {
+ void Function() _validateUser(BuildContext context, String? emailAddress, String? password) {
+    return () {
+      if (emailAddress == null || emailAddress.isEmpty) {
+        _showDialog(context, "INVALID E-MAIL", "Please, verify the e-mail.");
+        return;
+      }
+
+      if (password == null || password.isEmpty) {
+        _showDialog(context, "INVALID PASSWORD", "Please, verify the password.");
+        return;
+      }
+      _createUser(context, emailAddress, password);
+    };
+  }
+
+  void _createUser(BuildContext context, String emailAddress, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailAddress,
           password: password
       );
 
-      if (credential != null) {
+      if (credential.user != null) {
         Navigator.of(context).pushNamedAndRemoveUntil(
             HomePage.ROUTE, (route) => false);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
+        _showDialog(context, "USER NOT FOUND", "Please, verify the e-mail.");
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
+        _showDialog(context, "INVALID PASSWORD", "Please, verify the password.");
       }
     }
+  }
+
+  Future _showDialog(BuildContext context, String title, String message) {
+    return showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => PokeDialog(
+          title: title,
+          message: message,
+        )
+    );
   }
 }

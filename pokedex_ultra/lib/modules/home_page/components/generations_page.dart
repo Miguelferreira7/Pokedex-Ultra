@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokeapi/pokeapi.dart';
 import 'package:pokedex_ultra/modules/home_page/bloc/pokemon_bloc.dart';
 import 'package:pokedex_ultra/modules/home_page/bloc/pokemon_cubit_model.dart';
 import 'package:pokedex_ultra/utils/generation_enum.dart';
