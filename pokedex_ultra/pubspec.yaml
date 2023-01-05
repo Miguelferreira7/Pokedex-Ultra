@@ -44,6 +44,7 @@ dependencies:
   pokeapi: ^1.0.3
   path: ^1.8.2
   isar: ^3.0.5
+  auto_size_text: ^3.0.0
 
 
 dev_dependencies:

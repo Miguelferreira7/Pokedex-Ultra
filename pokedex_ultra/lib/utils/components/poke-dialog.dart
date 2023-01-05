@@ -12,7 +12,6 @@ class PokeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     ThemeData _theme = Theme.of(context);
 
     return Container(
@@ -32,15 +31,18 @@ class PokeDialog extends StatelessWidget {
         actions: [
           Column(
             children: [
-              Divider(color: Colors.grey),
-              TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(
-                    "OK",
-                    style: _theme.textTheme.subtitle1,
-                  )
+              const Divider(color: Colors.grey),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "OK",
+                      style: _theme.textTheme.headline1?.copyWith(fontSize: 16),
+                    )
+                ),
               ),
             ],
           )

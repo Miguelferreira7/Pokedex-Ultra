@@ -1,14 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/modules/home_page/components/generations_page.dart';
 import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/components/splash_screen.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
 import 'modules/home_page/bloc/pokemon_bloc.dart';
-import 'modules/login/components/sign-up-screen.dart';
-import 'modules/login/components/sign-in-screen.dart';
+import 'modules/login/components/sign_up_screen.dart';
+import 'modules/login/components/sign_in_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {

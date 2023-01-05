@@ -35,7 +35,8 @@ class MainTheme {
       headline1: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
       bodyText1: const TextStyle(color: Colors.white),
       subtitle2: const TextStyle(color: Colors.white),
-      subtitle1: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+      subtitle1: TextStyle(color: Colors.white, fontSize: 14),
+
     );
   }
 

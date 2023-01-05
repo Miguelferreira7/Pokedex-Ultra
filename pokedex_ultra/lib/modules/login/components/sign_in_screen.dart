@@ -5,9 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_cubit_model.dart';
-import 'package:pokedex_ultra/modules/login/components/sign-up-screen.dart';
+import 'package:pokedex_ultra/modules/login/components/sign_up_screen.dart';
 import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
+import 'package:pokedex_ultra/utils/firebase_exception_utils.dart';
 
 class SignInScreen extends StatelessWidget {
   static final String ROUTE = "/sign-in";
@@ -38,10 +39,10 @@ class SignInScreen extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.all(20),
       alignment: Alignment.center,
-      child: new Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          new Column(
+          Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               new PokeTextField(
@@ -50,7 +51,6 @@ class SignInScreen extends StatelessWidget {
                   title: "E-mail",
                   focusNode: new FocusNode(),
                   keyboardType: TextInputType.text,
-                  onChange: (value) { }
               ),
               new PokeTextField(
                   hint: "Password",
@@ -58,9 +58,8 @@ class SignInScreen extends StatelessWidget {
                   title: "Password",
                   focusNode: new FocusNode(),
                   keyboardType: TextInputType.text,
-                  onChange: (value) { }
               ),
-              new Container(
+              Container(
                 alignment: Alignment.topLeft,
                 margin: const EdgeInsets.only(top: 16, left: 8),
                 child: GestureDetector(
@@ -71,7 +70,7 @@ class SignInScreen extends StatelessWidget {
                   )),
                 ),
               ),
-              new Container(
+              Container(
                 height: MediaQuery.of(context).size.height / 13,
                 width: MediaQuery.of(context).size.width * 0.9,
                 margin: const EdgeInsets.only(top: 16),
@@ -99,11 +98,11 @@ class SignInScreen extends StatelessWidget {
               ),
             ],
           ),
-          new Column(
+          Column(
             children: [
-              new Container(
+              Container(
                 padding: const EdgeInsets.only(bottom: 8),
-                child: new Text("Privacy policy and use terms",
+                child: Text("Privacy policy and use terms",
                     style: _mainTheme.textTheme.subtitle1?.copyWith(
                       color: Theme.of(context).colorScheme.tertiary
                     )),
@@ -126,11 +125,11 @@ class SignInScreen extends StatelessWidget {
         _showDialog(context, "INVALID PASSWORD", "Please, verify the password.");
         return;
       }
-      _createUser(context, emailAddress, password);
+      _searchUser(context, emailAddress, password);
     };
   }
 
-  void _createUser(BuildContext context, String emailAddress, String password) async {
+  void _searchUser(BuildContext context, String emailAddress, String password) async {
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailAddress,
@@ -142,10 +141,15 @@ class SignInScreen extends StatelessWidget {
             HomePage.ROUTE, (route) => false);
       }
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
+
+      if (e.code == FirebaseExceptionUtilsSelection[FirebaseExceptionUtils.USER_NOT_FOUND]) {
         _showDialog(context, "USER NOT FOUND", "Please, verify the e-mail.");
-      } else if (e.code == 'wrong-password') {
+        return;
+      }
+
+      if (e.code == FirebaseExceptionUtilsSelection[FirebaseExceptionUtils.WRONG_PASSWORD]) {
         _showDialog(context, "INVALID PASSWORD", "Please, verify the password.");
+        return;
       }
     }
   }

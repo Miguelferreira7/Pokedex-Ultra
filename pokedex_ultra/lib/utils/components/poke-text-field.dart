@@ -7,7 +7,6 @@ class PokeTextField extends StatelessWidget {
   String title;
   TextInputType keyboardType;
   FocusNode focusNode;
-  ValueChanged<String> onChange;
 
   PokeTextField({
     required this.hint,
@@ -15,20 +14,19 @@ class PokeTextField extends StatelessWidget {
     required this.title,
     required this.focusNode,
     required this.keyboardType,
-    required this.onChange
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, bottom: 16),
+      margin: const EdgeInsets.only(top: 24),
       alignment: Alignment.centerLeft,
       child: Column(
         children: [
           Container(
             alignment: Alignment.centerLeft,
-            padding: EdgeInsets.only(left: 4, bottom: 4),
-            child: Text(title),
+            padding: const EdgeInsets.only(left: 4, bottom: 4),
+            child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
           Container(
             padding: const EdgeInsets.only(top: 4),
@@ -36,7 +34,6 @@ class PokeTextField extends StatelessWidget {
               focusNode: focusNode,
               controller: controller,
               keyboardType: keyboardType,
-              onChanged: onChange,
               decoration: InputDecoration(
                 hintText: title,
               ),

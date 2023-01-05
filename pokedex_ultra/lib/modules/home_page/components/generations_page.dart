@@ -123,7 +123,7 @@ class GenerationsModal extends StatelessWidget {
   }
 
   Widget _buildCancelButton(BuildContext context) {
-    return new Container(
+    return Container(
       height: 32,
       width: MediaQuery.of(context).size.width * 0.9,
       margin: const EdgeInsets.only(top: 8, bottom: 8),

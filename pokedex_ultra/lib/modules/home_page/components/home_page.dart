@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokeapi/model/game/pokedex.dart';
 import 'package:pokeapi/model/pokemon/pokemon.dart';
 import 'package:pokeapi/pokeapi.dart';
-import 'package:pokedex_ultra/modules/login/components/sign-in-screen.dart';
+import 'package:pokedex_ultra/modules/login/components/sign_in_screen.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 
 import '../bloc/pokemon_bloc.dart';
@@ -178,8 +178,7 @@ class HomePage extends StatelessWidget {
                   context, itemsTitle, Colors.white30,
                   Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
                 ),
-                onTap: () async {
-                },
+                onTap: () {},
               ),
             ],
           ),
@@ -320,7 +319,7 @@ class HomePage extends StatelessWidget {
                 color: containerBackgroundColor,
                 borderRadius: BorderRadius.circular(10)
               ),
-              child: Text("on demand", style: Theme.of(context).textTheme.button),
+              child: Text("On demand", style: Theme.of(context).textTheme.button),
             ),
             Container(
               alignment: Alignment.center,
