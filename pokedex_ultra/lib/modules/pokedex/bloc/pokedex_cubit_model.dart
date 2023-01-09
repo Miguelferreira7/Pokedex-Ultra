@@ -1,15 +1,15 @@
-class PokemonCubitModel {
+class PokedexCubitModel {
   bool? darkTheme;
 
-  PokemonCubitModel({
+  PokedexCubitModel({
     this.darkTheme
   });
 
-  PokemonCubitModel patchState({
+  PokedexCubitModel patchState({
     bool? darkTheme
   }) {
 
-    return PokemonCubitModel(
+    return PokedexCubitModel(
       darkTheme: darkTheme ?? this.darkTheme
     );
   }

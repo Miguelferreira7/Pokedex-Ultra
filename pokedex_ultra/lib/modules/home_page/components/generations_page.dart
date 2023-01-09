@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokeapi/pokeapi.dart';
-import 'package:pokedex_ultra/modules/home_page/bloc/pokemon_bloc.dart';
-import 'package:pokedex_ultra/modules/home_page/bloc/pokemon_cubit_model.dart';
+import 'package:pokedex_ultra/modules/home_page/bloc/home_page_cubit.dart';
+import 'package:pokedex_ultra/modules/home_page/bloc/home_page_cubit_model.dart';
 import 'package:pokedex_ultra/utils/generation_enum.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 
@@ -11,7 +11,7 @@ class GenerationsModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PokemonCubit, PokemonCubitModel>(
+    return BlocBuilder<HomePageCubit, HomePageCubitModel>(
       builder: (context, state) {
         return Container(
           height: MediaQuery.of(context).size.height,

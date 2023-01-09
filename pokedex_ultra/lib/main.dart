@@ -4,8 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/components/splash_screen.dart';
+import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
-import 'modules/home_page/bloc/pokemon_bloc.dart';
+import 'modules/home_page/bloc/home_page_cubit.dart';
 import 'modules/login/components/sign_up_screen.dart';
 import 'modules/login/components/sign_in_screen.dart';
 import 'firebase_options.dart';
@@ -21,7 +22,8 @@ void main() async {
       MultiBlocProvider(
         providers: [
           BlocProvider<LoginCubit>(create: (context) => LoginCubit()),
-          BlocProvider(create: (context) => PokemonCubit())
+          BlocProvider(create: (context) => HomePageCubit()),
+          BlocProvider(create: (context) => PokedexCubit()),
         ],
         child: const MyApp(),
       ),

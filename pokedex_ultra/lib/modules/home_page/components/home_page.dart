@@ -1,14 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokeapi/model/game/pokedex.dart';
-import 'package:pokeapi/model/pokemon/pokemon.dart';
-import 'package:pokeapi/pokeapi.dart';
 import 'package:pokedex_ultra/modules/login/components/sign_in_screen.dart';
+import 'package:pokedex_ultra/settings/appSettings.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
-
-import '../bloc/pokemon_bloc.dart';
-import '../bloc/pokemon_cubit_model.dart';
+import '../bloc/home_page_cubit.dart';
+import '../bloc/home_page_cubit_model.dart';
 import 'generations_page.dart';
 
 class HomePage extends StatelessWidget {
@@ -17,7 +14,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PokemonCubit, PokemonCubitModel>(
+    return BlocBuilder<HomePageCubit, HomePageCubitModel>(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(),
@@ -100,7 +97,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, PokemonCubitModel state) {
+  Widget _buildBody(BuildContext context, HomePageCubitModel state) {
     return Container(
       padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
       child: Column(
@@ -152,11 +149,11 @@ class HomePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               GestureDetector(
+                onTap: () => _buildSelectionPokedexModal(context),
                 child: _buildCardOption(
                     context, pokedexTitle, Colors.red,
                     Image.asset(ImageUtilsSelection[ImageUtils.POKEDEX]!)
                 ),
-                onTap: () => _buildSelectionPokedexModal(context),
               ),
               GestureDetector(
                 child: _buildCardOption(
@@ -178,7 +175,9 @@ class HomePage extends StatelessWidget {
                   context, itemsTitle, Colors.white30,
                   Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
                 ),
-                onTap: () {},
+                onTap: () async {
+                  AppSettings().InitAppConfiguration();
+                },
               ),
             ],
           ),
@@ -295,7 +294,7 @@ class HomePage extends StatelessWidget {
     });
   }
 
-    Widget _buildNews(BuildContext context, PokemonCubitModel state) {
+    Widget _buildNews(BuildContext context, HomePageCubitModel state) {
     Color containerBackgroundColor;
 
     if (state.darkTheme == true) {
@@ -319,7 +318,7 @@ class HomePage extends StatelessWidget {
                 color: containerBackgroundColor,
                 borderRadius: BorderRadius.circular(10)
               ),
-              child: Text("On demand", style: Theme.of(context).textTheme.button),
+              child: Text("On demand...", style: Theme.of(context).textTheme.button),
             ),
             Container(
               alignment: Alignment.center,
@@ -331,7 +330,7 @@ class HomePage extends StatelessWidget {
                   color: containerBackgroundColor,
                   borderRadius: BorderRadius.circular(10)
               ),
-              child: Text("on demand", style: Theme.of(context).textTheme.button),
+              child: Text("On demand...", style: Theme.of(context).textTheme.button),
             ),
           ],
         ),
