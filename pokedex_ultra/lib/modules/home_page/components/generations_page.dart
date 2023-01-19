@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokeapi/pokeapi.dart';
-import 'package:pokedex_ultra/modules/home_page/bloc/home_page_cubit.dart';
-import 'package:pokedex_ultra/modules/home_page/bloc/home_page_cubit_model.dart';
-import 'package:pokedex_ultra/utils/generation_enum.dart';
+import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
+import 'package:pokedex_ultra/dataBase/isar.dart';
+import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
+import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
+import 'package:pokedex_ultra/modules/pokedex/components/pokemons_list_page.dart';
+import 'package:pokedex_ultra/settings/appSettings.dart';
+import 'package:pokedex_ultra/utils/generation_utils.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
+import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
 
 class GenerationsModal extends StatelessWidget {
-  const GenerationsModal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<HomePageCubit, HomePageCubitModel>(
+    return BlocBuilder<PokedexCubit, PokedexCubitModel>(
       builder: (context, state) {
         return Container(
           height: MediaQuery.of(context).size.height,
@@ -79,47 +82,67 @@ class GenerationsModal extends StatelessWidget {
       String generationName, Generation generation,
       Image pokemonImage1, Image pokemonImage2, Image pokemonImage3) {
 
-    return GestureDetector(
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
-        margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(12)
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Container(
-              padding: const EdgeInsets.only(left: 8),
+    return BlocBuilder<PokedexCubit, PokedexCubitModel>(
+        builder: (context, state) {
+          return GestureDetector(
+            onTap: () => _getGenerationSelected(context, generation, state),
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
+              decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.secondary,
+                  borderRadius: BorderRadius.circular(12)
+              ),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  pokemonImage1,
-                  pokemonImage2,
-                  pokemonImage3
+                  Container(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        pokemonImage1,
+                        pokemonImage2,
+                        pokemonImage3
+                      ],
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      generationName,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.tertiary
+                    ),
+                  )
                 ],
               ),
             ),
-            Container(
-              child: Text(
-                generationName,
-                style: TextStyle(
-                  fontSize: 16
-                ),
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(right: 16),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Theme.of(context).colorScheme.tertiary
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+          );
+        });
+  }
+
+  _getGenerationSelected(
+      BuildContext context, Generation generation, PokedexCubitModel state) async {
+
+    if (context.read<PokedexCubit>().state.option == PokedexSelectionEnum.ALL_POKEMONS) {
+      await context.read<PokedexCubit>().getPokedexCompleted(generation);
+
+      if (state.pokemonList == null || state.pokemonList!.isEmpty) {
+        AppSettings appSettings = new AppSettings();
+        await appSettings.searchPokemonsByGeneration(generation);
+        await context.read<PokedexCubit>().getPokedexCompleted(generation);
+      }
+    }
+    Navigator.of(context).pushNamed(PokemonListPage.ROUTE);
   }
 
   Widget _buildCancelButton(BuildContext context) {

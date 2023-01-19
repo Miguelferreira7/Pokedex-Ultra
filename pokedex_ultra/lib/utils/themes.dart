@@ -15,7 +15,7 @@ class MainTheme {
     appBarTheme: _darkAppBarTheme(),
     colorScheme: _darkColorSchemes(),
     drawerTheme: _darkDrawerTheme(),
-    errorColor: Colors.white
+    errorColor: Colors.white,
   );
 
   static _darkColorSchemes() {
@@ -36,6 +36,7 @@ class MainTheme {
       bodyText1: const TextStyle(color: Colors.white),
       subtitle2: const TextStyle(color: Colors.white),
       subtitle1: TextStyle(color: Colors.white, fontSize: 14),
+
 
     );
   }

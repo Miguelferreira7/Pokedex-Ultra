@@ -5,22 +5,23 @@ import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/stats_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
 import 'package:pokedex_ultra/dataBase/isar.dart';
+import 'package:pokedex_ultra/utils/generation_utils.dart';
 
 class AppSettings {
   IsarRepository isar = new IsarRepository();
-  List<Pokemon?> firstGeneration = [];
-  List<Pokemon?> secondGeneration = [];
-  List<Pokemon?> thirdGeneration = [];
-  List<Pokemon?> fourthGeneration = [];
+
+  List<Pokemon?> _firstGeneration = [];
+  List<Pokemon?> _secondGeneration = [];
+  List<Pokemon?> _thirdGeneration = [];
+  List<Pokemon?> _fourthGeneration = [];
 
   Future<void> InitAppConfiguration() async {
-    await isar.createDB();
-
     await _getPokemonsApi();
-    List<PokemonEntity> filteredFirstGeneration = await _createPokemonEntity(firstGeneration, 1);
-    List<PokemonEntity> filteredSecondGeneration = await _createPokemonEntity(secondGeneration, 2);
-    List<PokemonEntity> filteredThirdGeneration = await _createPokemonEntity(thirdGeneration, 3);
-    List<PokemonEntity> filteredFourthGeneration = await _createPokemonEntity(fourthGeneration, 4);
+
+    List<PokemonEntity> filteredFirstGeneration = await _createPokemonEntity(_firstGeneration, 1);
+    List<PokemonEntity> filteredSecondGeneration = await _createPokemonEntity(_secondGeneration, 2);
+    List<PokemonEntity> filteredThirdGeneration = await _createPokemonEntity(_thirdGeneration, 3);
+    List<PokemonEntity> filteredFourthGeneration = await _createPokemonEntity(_fourthGeneration, 4);
 
     List<PokemonEntity> finalPokemonList =
         filteredFirstGeneration + filteredSecondGeneration +
@@ -29,37 +30,73 @@ class AppSettings {
     _savePokemons(finalPokemonList);
   }
 
-  Future<void> _getPokemonsApi() async {
-    firstGeneration = await PokeAPI.getObjectList<Pokemon>(1, 151);
-    secondGeneration = await PokeAPI.getObjectList<Pokemon>(152, 251);
-    thirdGeneration = await PokeAPI.getObjectList<Pokemon>(252, 386);
-    fourthGeneration = await PokeAPI.getObjectList<Pokemon>(387, 493);
+  Future<void> searchPokemonsByGeneration(Generation generationSelected) async {
+    List<Pokemon?> listApiPokemons = [];
+    List<PokemonEntity> filteredPokemonList = [];
+
+
+    switch (generationSelected) {
+
+      case Generation.FIRST_GENERATION:
+        listApiPokemons = await PokeAPI.getObjectList<Pokemon>(1, 151);
+        filteredPokemonList = await _createPokemonEntity(listApiPokemons, 1);
+        break;
+
+      case Generation.SECOND_GENERATION:
+        listApiPokemons = await PokeAPI.getObjectList<Pokemon>(152, 251);
+        filteredPokemonList = await _createPokemonEntity(listApiPokemons, 2);
+        break;
+
+      case Generation.THIRD_GENERATION:
+        listApiPokemons = await PokeAPI.getObjectList<Pokemon>(252, 386);
+        filteredPokemonList = await _createPokemonEntity(listApiPokemons, 3);
+        break;
+
+      case Generation.FOURTH_GENERATION:
+        listApiPokemons = await PokeAPI.getObjectList<Pokemon>(387, 493);
+        filteredPokemonList = await _createPokemonEntity(listApiPokemons, 4);
+        break;
+    }
+
+    _savePokemons(filteredPokemonList);
   }
 
-  Future<List<PokemonEntity>> _createPokemonEntity(List<Pokemon?> pokemons, int generation) async {
+  Future<void> _getPokemonsApi() async {
+    _firstGeneration = await PokeAPI.getObjectList<Pokemon>(1, 151);
+    _secondGeneration = await PokeAPI.getObjectList<Pokemon>(152, 251);
+    _thirdGeneration = await PokeAPI.getObjectList<Pokemon>(252, 386);
+    _fourthGeneration = await PokeAPI.getObjectList<Pokemon>(387, 493);
+  }
+
+  Future<void> InitDb(Generation generationSelected) async {
+    await isar.createDB();
+  }
+
+    Future<List<PokemonEntity>> _createPokemonEntity(List<Pokemon?> pokemons, int generation) async {
       List<PokemonEntity> pokemonEntities = [];
 
-      pokemons.forEach((element) async {
 
-        List<TypesEntity> typesEntity = await _createTypesEntity(element?.types);
-        List<MovesEntity> movesEntity = await _createMovesEntity(element?.moves);
-        List<StatsEntity> statsEntity = await _createStatsEntity(element?.stats);
+      for (int i = 0; i < pokemons.length; i++) {
+
+        List<TypesEntity> typesEntity = await _createTypesEntity(pokemons[i]?.types);
+        List<MovesEntity> movesEntity = await _createMovesEntity(pokemons[i]?.moves);
+        List<StatsEntity> statsEntity = await _createStatsEntity(pokemons[i]?.stats);
 
         pokemonEntities.add(new PokemonEntity()
           ..stats = statsEntity
           ..moves = movesEntity
           ..types = typesEntity
           ..generation = generation
-          ..number = element?.id
-          ..name = element?.name
-          ..order = element?.order
-          ..height = element?.height
-          ..weight = element?.weight
-          ..isDefault = element?.isDefault
-          ..baseExperience = element?.baseExperience
-          ..urlSprite = element?.sprites?.frontDefault
+          ..number = pokemons[i]?.id
+          ..name = pokemons[i]?.name
+          ..order = pokemons[i]?.order
+          ..height = pokemons[i]?.height
+          ..weight = pokemons[i]?.weight
+          ..isDefault = pokemons[i]?.isDefault
+          ..baseExperience = pokemons[i]?.baseExperience
+          ..urlSprite = pokemons[i]?.sprites?.frontDefault
         );
-      });
+      }
       return pokemonEntities;
   }
 
@@ -115,8 +152,6 @@ class AppSettings {
   }
 
   void _savePokemons(List<PokemonEntity> pokemons) {
-    isar.savePokemons(
-      pokemons
-    );
+    isar.savePokemons(pokemons);
   }
 }

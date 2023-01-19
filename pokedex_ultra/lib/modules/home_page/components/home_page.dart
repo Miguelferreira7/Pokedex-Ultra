@@ -1,9 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pokedex_ultra/dataBase/isar.dart';
 import 'package:pokedex_ultra/modules/login/components/sign_in_screen.dart';
 import 'package:pokedex_ultra/settings/appSettings.dart';
+import 'package:pokedex_ultra/utils/generation_utils.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
+import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
+import '../../pokedex/bloc/pokedex_cubit.dart';
 import '../bloc/home_page_cubit.dart';
 import '../bloc/home_page_cubit_model.dart';
 import 'generations_page.dart';
@@ -106,7 +110,7 @@ class HomePage extends StatelessWidget {
           Column(
             children: [
               _buildWelcomeMessage(context),
-              _buildMenuOptions(context),
+              _buildMenuContainer(context),
             ],
           ),
           Column(
@@ -134,7 +138,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuOptions(BuildContext context) {
+  Widget _buildMenuContainer(BuildContext context) {
     ThemeData theme = Theme.of(context);
     final String pokedexTitle = 'POKÉDEX';
     final String teamsTitle = 'YOUR TEAMS';
@@ -150,13 +154,13 @@ class HomePage extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () => _buildSelectionPokedexModal(context),
-                child: _buildCardOption(
+                child: _buildCardMenuOption(
                     context, pokedexTitle, Colors.red,
                     Image.asset(ImageUtilsSelection[ImageUtils.POKEDEX]!)
                 ),
               ),
               GestureDetector(
-                child: _buildCardOption(
+                child: _buildCardMenuOption(
                   context, teamsTitle, theme.colorScheme.primary,
                   Image.asset(ImageUtilsSelection[ImageUtils.LUCARIO]!),
                 ),
@@ -166,17 +170,23 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _buildCardOption(
-                context, habilitiesTitle, theme.colorScheme.tertiary,
-                Image.asset(ImageUtilsSelection[ImageUtils.THUNDER]!),
+              GestureDetector(
+                onTap: () {
+                  IsarRepository isar = IsarRepository();
+                  isar.clearDB();
+                },
+                child: _buildCardMenuOption(
+                  context, habilitiesTitle, theme.colorScheme.tertiary,
+                  Image.asset(ImageUtilsSelection[ImageUtils.THUNDER]!),
+                ),
               ),
               GestureDetector(
-                child: _buildCardOption(
+                child: _buildCardMenuOption(
                   context, itemsTitle, Colors.white30,
                   Image.asset(ImageUtilsSelection[ImageUtils.ULTRABALL]!),
                 ),
                 onTap: () async {
-                  AppSettings().InitAppConfiguration();
+                  AppSettings().searchPokemonsByGeneration(Generation.FOURTH_GENERATION);
                 },
               ),
             ],
@@ -186,7 +196,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildCardOption(
+  Widget _buildCardMenuOption(
       BuildContext context, String optionName, Color colorOption, Image imageAsset) {
 
     return Container(
@@ -235,6 +245,7 @@ class HomePage extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).pop();
+                    BlocProvider.of<PokedexCubit>(context).setPokedexOrFavoritesSelected(PokedexSelectionEnum.ALL_POKEMONS);
                     _buildGenerationsModal(context);
                   },
                   child: Container(

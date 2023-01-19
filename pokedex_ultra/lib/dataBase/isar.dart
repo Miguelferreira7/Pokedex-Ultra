@@ -1,17 +1,14 @@
 import 'package:isar/isar.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
+import 'package:pokedex_ultra/dataBase/i_isar.dart';
+import 'package:pokedex_ultra/utils/generation_utils.dart';
 
 
-class IsarRepository {
+class IsarRepository implements IIsarRepository{
   late Future<Isar?> db;
 
   IsarRepository() {
     db = createDB();
-  }
-
-  Future<void> savePokemons(List<PokemonEntity> pokemon) async {
-    final isar = await db;
-    isar?.writeTxnSync<List<int>>(() => isar.pokemonEntitys.putAllSync(pokemon));
   }
 
   Future<Isar?> createDB() async {
@@ -24,5 +21,29 @@ class IsarRepository {
       );
     }
     return await Isar.getInstance();
+  }
+
+  Future<void> savePokemons(List<PokemonEntity> pokemon) async {
+    final isar = await db;
+    isar?.writeTxnSync<List<int>>(() => isar.pokemonEntitys.putAllSync(pokemon));
+  }
+
+  Future<List<PokemonEntity>?> getAllPokemons(Generation generation) async {
+    final isar = await db;
+
+    try {
+      final pokemons = await isar?.pokemonEntitys
+          .filter()
+          .generationEqualTo(GenerationUtilsSelection[generation]).findAll();
+
+      return pokemons;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  Future<void> clearDB() async {
+    final isar = await db;
+    await isar?.writeTxn(() => isar.clear());
   }
 }
