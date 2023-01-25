@@ -105,7 +105,6 @@ class PokemonListPage extends StatelessWidget {
   List<Widget> _buildPokemonTypesContainer(BuildContext context, PokedexCubitModel state, int index) {
     List<Widget> types = [];
 
-
     if (state.pokemonList![index].types != null && state.pokemonList![index].types!.isNotEmpty) {
 
       for (int i = 0; i < state.pokemonList![index].types!.length; i++) {
@@ -118,7 +117,6 @@ class PokemonListPage extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   fontSize: 11
               )),
-
               alignment: Alignment.center,
               margin: const EdgeInsets.only(right: 8),
               width: 62,
