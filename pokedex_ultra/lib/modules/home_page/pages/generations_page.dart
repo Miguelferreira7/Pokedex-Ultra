@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
-import 'package:pokedex_ultra/dataBase/isar.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
-import 'package:pokedex_ultra/modules/pokedex/components/pokemons_list_page.dart';
 import 'package:pokedex_ultra/settings/appSettings.dart';
 import 'package:pokedex_ultra/utils/generation_utils.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
 import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
+
+import '../../pokedex/pages/pokemons_list_page.dart';
 
 class GenerationsModal extends StatelessWidget {
 
@@ -37,7 +36,7 @@ class GenerationsModal extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(top: 8),
       child: Text(
-        "Select One Generation",
+        "Select One Generation".toUpperCase(),
         style: Theme.of(context).textTheme.headline1,
       ),
     );
@@ -50,27 +49,39 @@ class GenerationsModal extends StatelessWidget {
         children: [
           _buildPokemonImages(context,
               "FIRST GENERATION", Generation.FIRST_GENERATION,
-              Image.asset(ImageUtilsSelection[ImageUtils.CHARMANDER]!, scale: 1.2),
-              Image.asset(ImageUtilsSelection[ImageUtils.BULBASAUR]!, scale: 1.2),
-              Image.asset(ImageUtilsSelection[ImageUtils.SQUIRTLE]!, scale: 1.2)
+              Image.asset(ImageUtilsSelection[ImageUtils.CHARMANDER]!,
+                  scale: 1.2, color: Colors.redAccent.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.BULBASAUR]!,
+                  scale: 1.2, color: Colors.green.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.SQUIRTLE]!,
+                  scale: 1.2, color: Colors.blueAccent.withOpacity(0.8))
           ),
           _buildPokemonImages(context,
               "SECOND GENERATION", Generation.SECOND_GENERATION,
-              Image.asset(ImageUtilsSelection[ImageUtils.CYNDAQUIL]!, scale: 1.2),
-              Image.asset(ImageUtilsSelection[ImageUtils.CHIKORITA]!, scale: 1.2),
-              Image.asset(ImageUtilsSelection[ImageUtils.TOTODILE]!, scale: 1.2)
+              Image.asset(ImageUtilsSelection[ImageUtils.CYNDAQUIL]!,
+                  scale: 1.2, color: Colors.redAccent.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.CHIKORITA]!,
+                  scale: 1.2, color: Colors.green.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.TOTODILE]!,
+                  scale: 1.2, color: Colors.blueAccent.withOpacity(0.8))
           ),
           _buildPokemonImages(context,
               "THIRD GENERATION", Generation.THIRD_GENERATION,
-              Image.asset(ImageUtilsSelection[ImageUtils.TORCHIC]!, scale: 1.1),
-              Image.asset(ImageUtilsSelection[ImageUtils.MUDKIP]!, scale: 1.1),
-              Image.asset(ImageUtilsSelection[ImageUtils.TREECKO]!, scale: 1.1)
+              Image.asset(ImageUtilsSelection[ImageUtils.TORCHIC]!,
+                  scale: 1.1, color: Colors.redAccent.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.MUDKIP]!,
+                  scale: 1.1, color: Colors.green.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.TREECKO]!,
+                  scale: 1.1, color: Colors.blueAccent.withOpacity(0.8))
           ),
           _buildPokemonImages(context,
               "FOURTH GENERATION", Generation.FOURTH_GENERATION,
-              Image.asset(ImageUtilsSelection[ImageUtils.CHIMCHAR]!, scale: 1.1),
-              Image.asset(ImageUtilsSelection[ImageUtils.TURTWIG]!, scale: 1.1),
-              Image.asset(ImageUtilsSelection[ImageUtils.PIPLUP]!, scale: 1.1)
+              Image.asset(ImageUtilsSelection[ImageUtils.CHIMCHAR]!,
+                  scale: 1.0, color: Colors.redAccent.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.TURTWIG]!,
+                  scale: 1.0, color: Colors.green.withOpacity(0.8)),
+              Image.asset(ImageUtilsSelection[ImageUtils.PIPLUP]!,
+                  scale: 1.0, color: Colors.blueAccent.withOpacity(0.8))
           ),
         ],
       ),
@@ -85,7 +96,7 @@ class GenerationsModal extends StatelessWidget {
     return BlocBuilder<PokedexCubit, PokedexCubitModel>(
         builder: (context, state) {
           return GestureDetector(
-            onTap: () => _getGenerationSelected(context, generation, state),
+            onTap: () => _getGenerationSelectedFunction(context, generation, state),
             child: Container(
               height: MediaQuery.of(context).size.height * 0.08,
               margin: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 4),
@@ -130,17 +141,12 @@ class GenerationsModal extends StatelessWidget {
         });
   }
 
-  _getGenerationSelected(
+  _getGenerationSelectedFunction(
       BuildContext context, Generation generation, PokedexCubitModel state) async {
+    Navigator.of(context).pop();
 
     if (context.read<PokedexCubit>().state.option == PokedexSelectionEnum.ALL_POKEMONS) {
       await context.read<PokedexCubit>().getPokedexCompleted(generation);
-
-      if (state.pokemonList == null || state.pokemonList!.isEmpty) {
-        AppSettings appSettings = new AppSettings();
-        await appSettings.searchPokemonsByGeneration(generation);
-        await context.read<PokedexCubit>().getPokedexCompleted(generation);
-      }
     }
     Navigator.of(context).pushNamed(PokemonListPage.ROUTE);
   }

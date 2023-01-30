@@ -16,6 +16,7 @@ class PokemonEntity {
   int? height;
   int? weight;
   bool? isDefault;
+  bool? isFavorite;
   int? order;
   String? urlSprite;
 

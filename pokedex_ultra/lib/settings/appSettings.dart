@@ -30,7 +30,7 @@ class AppSettings {
     _savePokemons(finalPokemonList);
   }
 
-  Future<void> searchPokemonsByGeneration(Generation generationSelected) async {
+  Future<List<PokemonEntity>> searchPokemonsByGeneration(Generation generationSelected) async {
     List<Pokemon?> listApiPokemons = [];
     List<PokemonEntity> filteredPokemonList = [];
 
@@ -58,7 +58,8 @@ class AppSettings {
         break;
     }
 
-    _savePokemons(filteredPokemonList);
+    await _savePokemons(filteredPokemonList);
+    return filteredPokemonList;
   }
 
   Future<void> _getPokemonsApi() async {
@@ -151,7 +152,7 @@ class AppSettings {
     return [];
   }
 
-  void _savePokemons(List<PokemonEntity> pokemons) {
-    isar.savePokemons(pokemons);
+  Future<void> _savePokemons(List<PokemonEntity> pokemons) async {
+    await isar.savePokemons(pokemons);
   }
 }

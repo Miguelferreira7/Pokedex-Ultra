@@ -110,7 +110,7 @@ const Map<TypeUtils, String> TypeUtilsSelection = {
   TypeUtils.SHADOW: "shadow"
 };
 
-Color validateColorType(String? type) {
+Color GetColorType(String? type) {
   if (TypeUtilsSelection[TypeUtils.NORMAL] == type) {
     return Color(0xFFA8A77A);
   }

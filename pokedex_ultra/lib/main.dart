@@ -1,16 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
-import 'package:pokedex_ultra/modules/login/components/splash_screen.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
-import 'package:pokedex_ultra/modules/pokedex/components/pokemons_list_page.dart';
+import 'package:pokedex_ultra/modules/pokedex/pages/pokemon_details_page.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
 import 'modules/home_page/bloc/home_page_cubit.dart';
-import 'modules/login/components/sign_up_screen.dart';
-import 'modules/login/components/sign_in_screen.dart';
+import 'modules/home_page/pages/home_page.dart';
 import 'firebase_options.dart';
+import 'modules/login/pages/sign_in_screen.dart';
+import 'modules/login/pages/sign_up_screen.dart';
+import 'modules/login/pages/splash_screen.dart';
+import 'modules/pokedex/pages/pokemons_list_page.dart';
 
 void main() async {
 
@@ -41,13 +42,14 @@ class MyApp extends StatelessWidget {
       title: 'Pokédex Ultra',
       debugShowCheckedModeBanner: false,
       theme: MainTheme.darkTheme,
-      initialRoute: SignInScreen.ROUTE,
+      initialRoute: SplashScreen.ROUTE,
       routes: {
         SplashScreen.ROUTE: (context) => const SplashScreen(),
         SignInScreen.ROUTE: (context) => SignInScreen(),
         SignUpScreen.ROUTE: (context) => SignUpScreen(),
         HomePage.ROUTE: (context) => const HomePage(),
-        PokemonListPage.ROUTE: (context) => PokemonListPage()
+        PokemonListPage.ROUTE: (context) => PokemonListPage(),
+        PokemonDetailsPage.ROUTE: (context) => PokemonDetailsPage()
       },
     );
   }

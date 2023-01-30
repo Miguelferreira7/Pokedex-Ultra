@@ -2,13 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_cubit_model.dart';
-import 'package:pokedex_ultra/modules/login/components/sign_up_screen.dart';
+import 'package:pokedex_ultra/modules/login/pages/sign_up_screen.dart';
 import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
 import 'package:pokedex_ultra/utils/firebase_exception_utils.dart';
+
+import '../../home_page/pages/home_page.dart';
 
 class SignInScreen extends StatelessWidget {
   static final String ROUTE = "/sign-in";

@@ -11,6 +11,7 @@ class IsarRepository implements IIsarRepository{
     db = createDB();
   }
 
+  @override
   Future<Isar?> createDB() async {
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
@@ -23,11 +24,13 @@ class IsarRepository implements IIsarRepository{
     return await Isar.getInstance();
   }
 
+  @override
   Future<void> savePokemons(List<PokemonEntity> pokemon) async {
     final isar = await db;
     isar?.writeTxnSync<List<int>>(() => isar.pokemonEntitys.putAllSync(pokemon));
   }
 
+  @override
   Future<List<PokemonEntity>?> getAllPokemons(Generation generation) async {
     final isar = await db;
 
@@ -38,10 +41,11 @@ class IsarRepository implements IIsarRepository{
 
       return pokemons;
     } catch (e) {
-      return null;
+      return [];
     }
   }
 
+  @override
   Future<void> clearDB() async {
     final isar = await db;
     await isar?.writeTxn(() => isar.clear());

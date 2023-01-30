@@ -1,7 +1,9 @@
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/dataBase/isar.dart';
+import 'package:pokedex_ultra/settings/appSettings.dart';
 import 'package:pokedex_ultra/utils/generation_utils.dart';
 import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
 import 'pokedex_cubit_actions.dart';
@@ -22,8 +24,23 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
 
   @override
   Future<void> getPokedexCompleted(Generation generation) async {
-    final List<PokemonEntity>? pokemons = await isar.getAllPokemons(generation);
+    List<PokemonEntity>? pokemons = await isar.getAllPokemons(generation);
 
-    emit(state.patchState(pokemonList: pokemons));
+    if (pokemons!.isNotEmpty) {
+      emit(state.patchState(pokemonList: pokemons));
+    } else {
+      AppSettings appSettings = new AppSettings();
+      pokemons = await appSettings.searchPokemonsByGeneration(generation);
+
+      emit(state.patchState(pokemonList: pokemons));
+    }
+  }
+
+  @override
+  Future<void> updateSelectedPokemonOptions(PokemonEntity pokemonSelected, Color pokemonColor) async {
+    emit(state.patchState(
+        pokemonSelected: pokemonSelected,
+        pokemonSelectedColor: pokemonColor
+    ));
   }
 }

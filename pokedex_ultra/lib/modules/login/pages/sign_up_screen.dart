@@ -1,10 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pokedex_ultra/modules/home_page/components/home_page.dart';
 import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
 import 'package:pokedex_ultra/utils/firebase_exception_utils.dart';
+
+import '../../home_page/pages/home_page.dart';
 
 class SignUpScreen extends StatelessWidget {
   static final String ROUTE = "/sign-up";
