@@ -42,7 +42,7 @@ class _PokeTextFieldState extends State<PokeTextField> {
               children: [
                 Expanded(
                   child: TextField(
-                    obscureText: widget.hidePassword,
+                    obscureText: !widget.hidePassword,
                     focusNode: widget.focusNode,
                     controller: widget.controller,
                     keyboardType: widget.keyboardType,

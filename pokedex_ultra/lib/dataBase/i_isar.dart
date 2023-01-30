@@ -5,11 +5,15 @@ import 'entity/pokemon_entity.dart';
 
 abstract class IIsarRepository {
 
-  Future<Isar?> createDB() async {}
+  Future<Isar?> createDB();
 
-  Future<void> savePokemons(List<PokemonEntity> pokemon) async {}
+  Future<void> savePokemons(List<PokemonEntity> pokemon);
 
-  Future<List<PokemonEntity>?> getAllPokemons(Generation generation) async {}
+  Future<List<PokemonEntity>?> getAllPokemons(Generation generation);
+
+  Future<void> updatePokemonFavoriteStatus(PokemonEntity Pokemon);
+
+  Future<void> removePokemonfromPersonalPokedex(PokemonEntity idPokemon);
 
   Future<void> clearDB() async {}
   }

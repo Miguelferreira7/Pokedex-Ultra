@@ -32,51 +32,61 @@ const PokemonEntitySchema = CollectionSchema(
       name: r'height',
       type: IsarType.long,
     ),
-    r'isDefault': PropertySchema(
+    r'imagePokemon': PropertySchema(
       id: 3,
+      name: r'imagePokemon',
+      type: IsarType.long,
+    ),
+    r'isDefault': PropertySchema(
+      id: 4,
       name: r'isDefault',
       type: IsarType.bool,
     ),
+    r'isFavorite': PropertySchema(
+      id: 5,
+      name: r'isFavorite',
+      type: IsarType.bool,
+    ),
     r'moves': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'moves',
       type: IsarType.objectList,
       target: r'MovesEntity',
     ),
     r'name': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'name',
       type: IsarType.string,
     ),
     r'number': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'number',
       type: IsarType.long,
     ),
     r'order': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'order',
       type: IsarType.long,
     ),
     r'stats': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'stats',
       type: IsarType.objectList,
       target: r'StatsEntity',
     ),
     r'types': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'types',
       type: IsarType.objectList,
       target: r'TypesEntity',
     ),
     r'urlSprite': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'urlSprite',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'weight',
       type: IsarType.long,
     )
@@ -171,30 +181,32 @@ void _pokemonEntitySerialize(
   writer.writeLong(offsets[0], object.baseExperience);
   writer.writeLong(offsets[1], object.generation);
   writer.writeLong(offsets[2], object.height);
-  writer.writeBool(offsets[3], object.isDefault);
+  writer.writeLong(offsets[3], object.imagePokemon);
+  writer.writeBool(offsets[4], object.isDefault);
+  writer.writeBool(offsets[5], object.isFavorite);
   writer.writeObjectList<MovesEntity>(
-    offsets[4],
+    offsets[6],
     allOffsets,
     MovesEntitySchema.serialize,
     object.moves,
   );
-  writer.writeString(offsets[5], object.name);
-  writer.writeLong(offsets[6], object.number);
-  writer.writeLong(offsets[7], object.order);
+  writer.writeString(offsets[7], object.name);
+  writer.writeLong(offsets[8], object.number);
+  writer.writeLong(offsets[9], object.order);
   writer.writeObjectList<StatsEntity>(
-    offsets[8],
+    offsets[10],
     allOffsets,
     StatsEntitySchema.serialize,
     object.stats,
   );
   writer.writeObjectList<TypesEntity>(
-    offsets[9],
+    offsets[11],
     allOffsets,
     TypesEntitySchema.serialize,
     object.types,
   );
-  writer.writeString(offsets[10], object.urlSprite);
-  writer.writeLong(offsets[11], object.weight);
+  writer.writeString(offsets[12], object.urlSprite);
+  writer.writeLong(offsets[13], object.weight);
 }
 
 PokemonEntity _pokemonEntityDeserialize(
@@ -208,30 +220,32 @@ PokemonEntity _pokemonEntityDeserialize(
   object.generation = reader.readLongOrNull(offsets[1]);
   object.height = reader.readLongOrNull(offsets[2]);
   object.id = id;
-  object.isDefault = reader.readBoolOrNull(offsets[3]);
+  object.imagePokemon = reader.readLongOrNull(offsets[3]);
+  object.isDefault = reader.readBoolOrNull(offsets[4]);
+  object.isFavorite = reader.readBoolOrNull(offsets[5]);
   object.moves = reader.readObjectList<MovesEntity>(
-    offsets[4],
+    offsets[6],
     MovesEntitySchema.deserialize,
     allOffsets,
     MovesEntity(),
   );
-  object.name = reader.readStringOrNull(offsets[5]);
-  object.number = reader.readLongOrNull(offsets[6]);
-  object.order = reader.readLongOrNull(offsets[7]);
+  object.name = reader.readStringOrNull(offsets[7]);
+  object.number = reader.readLongOrNull(offsets[8]);
+  object.order = reader.readLongOrNull(offsets[9]);
   object.stats = reader.readObjectList<StatsEntity>(
-    offsets[8],
+    offsets[10],
     StatsEntitySchema.deserialize,
     allOffsets,
     StatsEntity(),
   );
   object.types = reader.readObjectList<TypesEntity>(
-    offsets[9],
+    offsets[11],
     TypesEntitySchema.deserialize,
     allOffsets,
     TypesEntity(),
   );
-  object.urlSprite = reader.readStringOrNull(offsets[10]);
-  object.weight = reader.readLongOrNull(offsets[11]);
+  object.urlSprite = reader.readStringOrNull(offsets[12]);
+  object.weight = reader.readLongOrNull(offsets[13]);
   return object;
 }
 
@@ -249,37 +263,41 @@ P _pokemonEntityDeserializeProp<P>(
     case 2:
       return (reader.readLongOrNull(offset)) as P;
     case 3:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 4:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 5:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 6:
       return (reader.readObjectList<MovesEntity>(
         offset,
         MovesEntitySchema.deserialize,
         allOffsets,
         MovesEntity(),
       )) as P;
-    case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
-      return (reader.readLongOrNull(offset)) as P;
     case 7:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
+      return (reader.readLongOrNull(offset)) as P;
+    case 9:
+      return (reader.readLongOrNull(offset)) as P;
+    case 10:
       return (reader.readObjectList<StatsEntity>(
         offset,
         StatsEntitySchema.deserialize,
         allOffsets,
         StatsEntity(),
       )) as P;
-    case 9:
+    case 11:
       return (reader.readObjectList<TypesEntity>(
         offset,
         TypesEntitySchema.deserialize,
         allOffsets,
         TypesEntity(),
       )) as P;
-    case 10:
+    case 12:
       return (reader.readStringOrNull(offset)) as P;
-    case 11:
+    case 13:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -659,6 +677,80 @@ extension PokemonEntityQueryFilter
   }
 
   QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'imagePokemon',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'imagePokemon',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonEqualTo(int? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'imagePokemon',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonGreaterThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'imagePokemon',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonLessThan(
+    int? value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'imagePokemon',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      imagePokemonBetween(
+    int? lower,
+    int? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'imagePokemon',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
       isDefaultIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -681,6 +773,34 @@ extension PokemonEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isDefault',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isFavoriteIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isFavorite',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isFavoriteIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isFavorite',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isFavoriteEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isFavorite',
         value: value,
       ));
     });
@@ -1605,6 +1725,20 @@ extension PokemonEntityQuerySortBy
     });
   }
 
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      sortByImagePokemon() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePokemon', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      sortByImagePokemonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePokemon', Sort.desc);
+    });
+  }
+
   QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> sortByIsDefault() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDefault', Sort.asc);
@@ -1615,6 +1749,19 @@ extension PokemonEntityQuerySortBy
       sortByIsDefaultDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDefault', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> sortByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      sortByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
@@ -1733,6 +1880,20 @@ extension PokemonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      thenByImagePokemon() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePokemon', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      thenByImagePokemonDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'imagePokemon', Sort.desc);
+    });
+  }
+
   QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> thenByIsDefault() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDefault', Sort.asc);
@@ -1743,6 +1904,19 @@ extension PokemonEntityQuerySortThenBy
       thenByIsDefaultDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isDefault', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> thenByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      thenByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
     });
   }
 
@@ -1829,9 +2003,22 @@ extension PokemonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<PokemonEntity, PokemonEntity, QDistinct>
+      distinctByImagePokemon() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'imagePokemon');
+    });
+  }
+
   QueryBuilder<PokemonEntity, PokemonEntity, QDistinct> distinctByIsDefault() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'isDefault');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QDistinct> distinctByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isFavorite');
     });
   }
 
@@ -1894,9 +2081,21 @@ extension PokemonEntityQueryProperty
     });
   }
 
+  QueryBuilder<PokemonEntity, int?, QQueryOperations> imagePokemonProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'imagePokemon');
+    });
+  }
+
   QueryBuilder<PokemonEntity, bool?, QQueryOperations> isDefaultProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isDefault');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, bool?, QQueryOperations> isFavoriteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isFavorite');
     });
   }
 

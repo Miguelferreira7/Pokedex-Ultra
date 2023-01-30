@@ -19,6 +19,7 @@ class PokemonEntity {
   bool? isFavorite;
   int? order;
   String? urlSprite;
+  int? imagePokemon;
 
   // final moves = IsarLinks<MovesEntity>();
   // final types = IsarLinks<TypesEntity>();

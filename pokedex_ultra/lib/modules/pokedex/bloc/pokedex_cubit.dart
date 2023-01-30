@@ -43,4 +43,13 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
         pokemonSelectedColor: pokemonColor
     ));
   }
+
+  @override
+  void updatePokemonfavoriteStatus() async {
+    PokemonEntity pokemon = state.pokemonSelected!;
+    pokemon.isFavorite = !pokemon.isFavorite!;
+
+    await isar.updatePokemonFavoriteStatus(pokemon);
+    emit(state.patchState(pokemonSelected: pokemon));
+  }
 }

@@ -15,7 +15,6 @@ class PokemonDetailsPage extends StatelessWidget {
     return BlocBuilder<PokedexCubit, PokedexCubitModel>(
       builder: (context, state) {
         final pokemon = state.pokemonSelected!;
-
         return Scaffold(
           appBar: AppBar(
             backgroundColor: state.pokemonSelectedColor,
@@ -64,24 +63,29 @@ class PokemonDetailsPage extends StatelessWidget {
               ),
             ),
             _buildBackgroundImage(context, pokemonColor),
-            _buildFavoriteButton(context),
+            _buildFavoriteButton(context, pokemon),
+            _buildPokemonImage(context, pokemon)
           ],
         ),
       ),
     );
   }
 
-  Widget _buildFavoriteButton(BuildContext context) {
+  Widget _buildFavoriteButton(BuildContext context, PokemonEntity pokemon) {
     return Positioned(
       top: MediaQuery.of(context).size.height * 0.27,
       right: MediaQuery.of(context).size.width / 18,
       child: GestureDetector(
-          child: Icon(Icons.favorite,
-              // color: _bloc!.pokemonSelecionado.isFavorite == true
-              //     ? Colors.red
-              //     : Colors.grey,
-              size: 30),
-          onTap: () {}),
+        child: Icon(
+          size: 30,
+          Icons.favorite,
+          color: pokemon.isFavorite == true ? Colors.red : Colors.grey,
+        ),
+        onTap: () {
+          PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
+
+          _bloc.updatePokemonfavoriteStatus();
+        }),
     );
   }
 
@@ -89,7 +93,6 @@ class PokemonDetailsPage extends StatelessWidget {
     List<Widget> listTypesWidgets = [];
 
     pokemon.types?.forEach((element) {
-
       Color pokemonColor = Colors.grey;
       pokemonColor = GetColorType(element.type);
 
@@ -182,16 +185,17 @@ class PokemonDetailsPage extends StatelessWidget {
     );
   }
 
-  // Widget _pokemonImage(context, String? pokeimage) {
-  //   return Positioned(
-  //     top: MediaQuery.of(context).size.height * 0.02,
-  //     right: MediaQuery.of(context).size.width / 3.66,
-  //     child: Image.network(
-  //       '${pokeimage}',
-  //       height: MediaQuery.of(context).size.height * 0.42,
-  //       width: MediaQuery.of(context).size.width * 0.48,
-  //       scale: 0.48,
-  //     ),
-  //   );
-  // }
+  Widget _buildPokemonImage(context, PokemonEntity pokemon) {
+    return Positioned(
+      top: MediaQuery.of(context).size.height * 0.02,
+      right: MediaQuery.of(context).size.width / 3.66,
+      child: Image.network(
+        '${pokemon.urlSprite}',
+        height: MediaQuery.of(context).size.height * 0.42,
+        width: MediaQuery.of(context).size.width * 0.48,
+        scale: 0.048,
+
+      ),
+    );
+  }
 }

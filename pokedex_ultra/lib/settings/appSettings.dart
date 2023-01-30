@@ -88,6 +88,8 @@ class AppSettings {
           ..moves = movesEntity
           ..types = typesEntity
           ..generation = generation
+          ..imagePokemon = 0
+          ..isFavorite = false
           ..number = pokemons[i]?.id
           ..name = pokemons[i]?.name
           ..order = pokemons[i]?.order

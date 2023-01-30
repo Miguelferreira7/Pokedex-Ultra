@@ -19,7 +19,7 @@ class PokemonListPage extends StatelessWidget {
             centerTitle: true,
             title: const Text(
               "POKEMONS",
-              style: TextStyle(fontSize: 24),
+              style: const TextStyle(fontSize: 24),
             ),
           ),
           body: _buildBody(context, state),
@@ -58,30 +58,39 @@ class PokemonListPage extends StatelessWidget {
   }
 
   Widget _buildPokemonCard(BuildContext context, PokemonEntity pokemon, Color pokemonColor) {
-    return GestureDetector(
-      onTap: () async {
-        PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
-        await _bloc.updateSelectedPokemonOptions(pokemon, pokemonColor);
-
-        Navigator.of(context).pushNamed(PokemonDetailsPage.ROUTE);
-      },
-      child: Container(
-        padding: const EdgeInsets.only(left: 16),
-        margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-        height: MediaQuery.of(context).size.height * 0.14,
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-          color: pokemonColor.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(9),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            _buildPokemonNumber(context, pokemon.number),
-            _buildPokemonName(context, pokemon.name, pokemonColor),
-            Row(children: _buildPokemonTypesContainer(context, pokemon))
-          ],
+    return Container(
+      child: GestureDetector(
+        onTap: () async {
+          PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
+          await _bloc.updateSelectedPokemonOptions(pokemon, pokemonColor);
+          Navigator.of(context).pushNamed(PokemonDetailsPage.ROUTE);
+        },
+        child: Container(
+          padding: const EdgeInsets.only(left: 16),
+          margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+          height: MediaQuery.of(context).size.height * 0.14,
+          width: MediaQuery.of(context).size.width * 0.4,
+          decoration: BoxDecoration(
+            color: pokemonColor.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(9),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildPokemonNumber(context, pokemon.number),
+                    _buildPokemonName(context, pokemon.name, pokemonColor),
+                    Row(children: _buildPokemonTypesContainer(context, pokemon))
+                  ],
+                ),
+              ),
+              _buildPokemonImage(context, pokemon)
+            ],
+          ),
         ),
       ),
     );
@@ -103,7 +112,7 @@ class PokemonListPage extends StatelessWidget {
       child: Text(
         '#${numPokemon}',
         style: TextStyle(
-            fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+            fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
       ),
     );
   }
@@ -115,11 +124,10 @@ class PokemonListPage extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(9),
       ),
-      alignment: Alignment.centerLeft,
       child: Text(
         '${nomePokemon?.toUpperCase()}',
         style: TextStyle(
-            color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600),
+            color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -136,8 +144,7 @@ class PokemonListPage extends StatelessWidget {
 
         types.add(Container(
           child: Text("$typeIndex".toUpperCase(),
-              style:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 8),
           width: 62,
@@ -150,5 +157,12 @@ class PokemonListPage extends StatelessWidget {
       }
     }
     return types;
+  }
+
+  Widget _buildPokemonImage(BuildContext context, PokemonEntity pokemon) {
+    return Container(
+      child: Image.network("${pokemon.urlSprite}",
+      scale: 0.4),
+    );
   }
 }

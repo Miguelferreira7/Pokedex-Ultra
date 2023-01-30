@@ -11,4 +11,6 @@ abstract class PokedexCubitActions{
   Future<void> getPokedexCompleted(Generation generation);
 
   Future<void> updateSelectedPokemonOptions(PokemonEntity pokemonSelected, Color pokemonColor);
+
+  void updatePokemonfavoriteStatus();
 }

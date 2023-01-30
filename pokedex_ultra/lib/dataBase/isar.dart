@@ -50,4 +50,19 @@ class IsarRepository implements IIsarRepository{
     final isar = await db;
     await isar?.writeTxn(() => isar.clear());
   }
+
+  @override
+  Future<void> updatePokemonFavoriteStatus(PokemonEntity pokemon) async {
+    final isar = await db;
+
+    await isar?.writeTxn(() async {
+      await isar.pokemonEntitys.put(pokemon);
+    });
+  }
+
+  @override
+  Future<void> removePokemonfromPersonalPokedex(PokemonEntity pokemon) {
+    // TODO: implement removePokemonfromPersonalPokedex
+    throw UnimplementedError();
+  }
 }
