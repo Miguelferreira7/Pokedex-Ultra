@@ -1,17 +1,39 @@
+import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/utils/image_utils.dart';
+import 'package:pokedex_ultra/utils/news_utils.dart';
 import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../login/pages/sign_in_screen.dart';
 import '../../pokedex/bloc/pokedex_cubit.dart';
 import '../bloc/home_page_cubit.dart';
 import '../bloc/home_page_cubit_model.dart';
 import 'generations_page.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
   static final String ROUTE = "/home-page";
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  List<TargetFocus> targets = [];
+  TutorialCoachMark? tutorialCoachMark;
+  final keyTutorial1 = new GlobalKey();
+  final keyTutorial2 = new GlobalKey();
+  final keyTutorial3 = new GlobalKey();
+  final onTap = new GlobalKey();
+
+  @override
+  void initState() {
+    _initTarget();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +179,10 @@ class HomePage extends StatelessWidget {
                   context,
                   teamsTitle,
                   theme.colorScheme.primary,
-                  Image.asset(ImageUtilsSelection[ImageUtils.LUCARIO]!),
+                  Image.asset(
+                    ImageUtilsSelection[ImageUtils.LUCARIO]!,
+                    color: Colors.blueAccent.withOpacity(0.8),
+                  ),
                 ),
               ),
             ],
@@ -224,61 +249,83 @@ class HomePage extends StatelessWidget {
         builder: (builder) {
           return AlertDialog(
             insetPadding: EdgeInsets.zero,
-            contentPadding: EdgeInsets.zero,
-            backgroundColor: Colors.transparent,
-            content: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    BlocProvider.of<PokedexCubit>(context)
-                        .setPokedexOrFavoritesSelected(
-                            PokedexSelectionEnum.ALL_POKEMONS);
-                    _buildGenerationsModal(context);
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(8),
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text("All Pokémons",
-                              style: Theme.of(context).textTheme.subtitle1),
-                        )
-                      ],
+            backgroundColor: Colors.black.withOpacity(0.4),
+            content: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    alignment: Alignment.centerRight,
+                    child: IconButton(
+                      onPressed: () {
+                        _showTutorial(context);
+                      },
+                      icon: Icon(Icons.help_outline_rounded),
                     ),
                   ),
-                ),
-                GestureDetector(
-                  child: Container(
-                    margin: const EdgeInsets.all(8),
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(),
-                        Container(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: Text("Your Pokédex",
-                              style: Theme.of(context).textTheme.subtitle1),
-                        )
-                      ],
-                    ),
+                  Row(
+                    key: keyTutorial1,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        key: keyTutorial2,
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          BlocProvider.of<PokedexCubit>(context)
+                              .setPokedexOrFavoritesSelected(
+                            PokedexSelectionEnum.ALL_POKEMONS,
+                          );
+                          _buildGenerationsModal(context);
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Colors.blue,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(),
+                              Container(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text("All Pokémons",
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        key: keyTutorial3,
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(),
+                              Container(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Text("Your Pokédex",
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
+                ],
+              ),
             ),
           );
         });
@@ -293,45 +340,237 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildNews(BuildContext context, HomePageCubitModel state) {
-    Color containerBackgroundColor;
-
-    if (state.darkTheme == true) {
-      containerBackgroundColor = Colors.white;
-    } else {
-      containerBackgroundColor = Colors.blue;
-    }
-
-    return Container(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
-              padding: const EdgeInsets.only(left: 8),
-              width: MediaQuery.of(context).size.width / 1.4,
-              height: MediaQuery.of(context).size.height * 0.25,
-              decoration: BoxDecoration(
-                  color: containerBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text("On demand...",
-                  style: Theme.of(context).textTheme.button),
-            ),
-            Container(
-              alignment: Alignment.center,
-              margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
-              padding: const EdgeInsets.only(left: 8),
-              width: MediaQuery.of(context).size.width / 1.4,
-              height: MediaQuery.of(context).size.height * 0.25,
-              decoration: BoxDecoration(
-                  color: containerBackgroundColor,
-                  borderRadius: BorderRadius.circular(10)),
-              child: Text("On demand...",
-                  style: Theme.of(context).textTheme.button),
-            ),
-          ],
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 24, bottom: 8),
+          child:
+              Text("Articles:", style: Theme.of(context).textTheme.headline1),
         ),
+        Container(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                GestureDetector(
+                  onTap: () =>
+                      _openUrlArticle(NewsUtils.urlWebSiteAshWinsLeagueNews),
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    height: MediaQuery.of(context).size.height * 0.24,
+                    child: Stack(children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(16),
+                        child: Image.network(
+                            "${NewsUtils.urlImageAshWinsLeagueNews}",
+                            fit: BoxFit.fill),
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.topCenter,
+                            stops: [0.14, 0.6],
+                            colors: [
+                              Colors.black,
+                              Colors.black.withOpacity(0.4),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomLeft,
+                        margin: const EdgeInsets.only(left: 16, bottom: 16),
+                        child: Text(
+                          "Ash Ketchum has finally won the Pokemon "
+                          "League after 25 years",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyText1
+                              ?.copyWith(fontSize: 20),
+                        ),
+                      )
+                    ]),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.only(top: 8, left: 8, right: 8),
+                  padding: const EdgeInsets.only(left: 8),
+                  width: MediaQuery.of(context).size.width / 1.4,
+                  height: MediaQuery.of(context).size.height * 0.24,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10)),
+                  child: Text("On demand...",
+                      style: Theme.of(context).textTheme.button),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _openUrlArticle(String url) async {
+    final Uri _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
+      launchUrl(_url, mode: LaunchMode.externalNonBrowserApplication);
+    }
+  }
+
+  void _showTutorial(BuildContext context) {
+    tutorialCoachMark = new TutorialCoachMark(
+      pulseAnimationDuration: const Duration(milliseconds: 800),
+      focusAnimationDuration: const Duration(milliseconds: 500),
+      targets: targets,
+      opacityShadow: 0.8,
+      alignSkip: Alignment.topRight,
+    )..show(context: context);
+  }
+
+  void _initTarget() {
+    Color backgroundColor = Colors.yellow.withOpacity(0.5);
+
+    targets.add(
+      new TargetFocus(
+        identify: "Target 1",
+        keyTarget: keyTutorial2,
+        enableTargetTab: true,
+        enableOverlayTab: true,
+        color: backgroundColor,
+        focusAnimationDuration: Duration(seconds: 1),
+        contents: [
+          new TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return new Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Container(
+                    alignment: Alignment.centerLeft,
+                    child: new Text(
+                      "ALL POKEMONS",
+                      style: new TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  new Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: new Text(
+                      "In all Pokemon's"
+                      " you can see the complete pokédex from each generation.",
+                      style: new TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  new GestureDetector(
+                    child: new Container(
+                      padding: EdgeInsets.only(top: 16),
+                      child: new Text(
+                        "TOUCH ON THE SCREEN TO PROCEED",
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 16),
+                      ),
+                      alignment: Alignment.center,
+                    ),
+                    onTap: () {
+                      onTap;
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
+    );
+    targets.add(
+      new TargetFocus(
+        identify: "Target 2",
+        keyTarget: keyTutorial3,
+        color: backgroundColor,
+        enableTargetTab: true,
+        enableOverlayTab: true,
+        focusAnimationDuration: Duration(seconds: 1),
+        contents: [
+          new TargetContent(
+            align: ContentAlign.top,
+            builder: (context, controller) {
+              return new Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  new Container(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: new Text(
+                      "YOUR POKÉDEX",
+                      style: new TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    alignment: Alignment.centerLeft,
+                  ),
+                  new Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Colors.white),
+                    child: new Text(
+                      "This is your pokédex, "
+                      "where you can add the Pokemon by marking as favorites"
+                      " on the all Pokemon's screen",
+                      style: new TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black54,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    alignment: Alignment.center,
+                  ),
+                  new GestureDetector(
+                    child: new Container(
+                      padding: EdgeInsets.only(top: 16),
+                      child: new Text(
+                        "TOUCH ON THE SCREEN TO PROCEED",
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 16),
+                      ),
+                      alignment: Alignment.center,
+                    ),
+                    onTap: () {
+                      onTap;
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }

@@ -143,7 +143,6 @@ class GenerationsModal extends StatelessWidget {
 
   _getGenerationSelectedFunction(
       BuildContext context, Generation generation, PokedexCubitModel state) async {
-    Navigator.of(context).pop();
 
     if (context.read<PokedexCubit>().state.option == PokedexSelectionEnum.ALL_POKEMONS) {
       await context.read<PokedexCubit>().getPokedexCompleted(generation);

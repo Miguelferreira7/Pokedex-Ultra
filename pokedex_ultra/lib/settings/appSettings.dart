@@ -1,13 +1,18 @@
+import 'package:pokeapi/model/pokemon/pokemon-specie.dart';
 import 'package:pokeapi/model/pokemon/pokemon.dart';
 import 'package:pokeapi/pokeapi.dart';
+import 'package:pokedex_ultra/api/pokemon_service.dart';
+import 'package:pokedex_ultra/dataBase/entity/description_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/moves_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/stats_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
 import 'package:pokedex_ultra/dataBase/isar.dart';
+import 'package:pokedex_ultra/modules/pokedex/model/pokemon_species_viewmodel.dart';
 import 'package:pokedex_ultra/utils/generation_utils.dart';
 
 class AppSettings {
+  PokemonService service = new PokemonService();
   IsarRepository isar = new IsarRepository();
 
   List<Pokemon?> _firstGeneration = [];
@@ -78,10 +83,12 @@ class AppSettings {
 
 
       for (int i = 0; i < pokemons.length; i++) {
+        PokemonSpeciesViewModel pokemonSpecies = await service.getPokemonDescription(pokemons[i]!.species!.url!);
 
         List<TypesEntity> typesEntity = await _createTypesEntity(pokemons[i]?.types);
         List<MovesEntity> movesEntity = await _createMovesEntity(pokemons[i]?.moves);
         List<StatsEntity> statsEntity = await _createStatsEntity(pokemons[i]?.stats);
+        List<DescriptionEntity> pokemonDescription = await _getPokemonDescription(pokemonSpecies);
 
         pokemonEntities.add(new PokemonEntity()
           ..stats = statsEntity
@@ -90,6 +97,7 @@ class AppSettings {
           ..generation = generation
           ..imagePokemon = 0
           ..isFavorite = false
+          ..isLegendary = pokemonSpecies.isLegendary != null ? pokemonSpecies.isLegendary : false
           ..number = pokemons[i]?.id
           ..name = pokemons[i]?.name
           ..order = pokemons[i]?.order
@@ -152,6 +160,23 @@ class AppSettings {
       return statsEntity;
     }
     return [];
+  }
+
+  Future<List<DescriptionEntity>> _getPokemonDescription(PokemonSpeciesViewModel? pokemonSpecies) async {
+    List<DescriptionEntity> descriptionsList = [];
+
+    if (pokemonSpecies != null && pokemonSpecies.flavorTextEntries!.isNotEmpty) {
+      for (int i = 0; i < pokemonSpecies.flavorTextEntries!.length; i++) {
+        if (pokemonSpecies.flavorTextEntries![i].language == 'en') {
+          descriptionsList.add(new DescriptionEntity()
+              ..descriptionText = pokemonSpecies.flavorTextEntries![i].flavorText
+              ..language = pokemonSpecies.flavorTextEntries![i].language!.name
+          );
+        }
+      }
+    }
+
+    return descriptionsList;
   }
 
   Future<void> _savePokemons(List<PokemonEntity> pokemons) async {

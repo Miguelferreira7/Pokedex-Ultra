@@ -78,7 +78,7 @@ class SignInScreen extends StatelessWidget {
                 width: MediaQuery.of(context).size.width * 0.9,
                 margin: const EdgeInsets.only(top: 16),
                 child: ElevatedButton(
-                  onPressed: _validateUser(context, _controllerEmail.text, _controllerPassword.text),
+                  onPressed: _validateUser(context, _controllerEmail.value.text, _controllerPassword.value.text),
                   child: Text("SIGN-IN", style: _mainTheme.textTheme.button),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(

@@ -83,7 +83,6 @@ class PokemonDetailsPage extends StatelessWidget {
         ),
         onTap: () {
           PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
-
           _bloc.updatePokemonfavoriteStatus();
         }),
     );
@@ -166,13 +165,14 @@ class PokemonDetailsPage extends StatelessWidget {
   }
 
   Widget _buildPokemonWeightCard(int? pokeWeight) {
+
     return Container(
       decoration: BoxDecoration(),
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.fromLTRB(0, 0, 5, 5),
-            child: Text('$pokeWeight kg',
+            child: Text('${pokeWeight} kg',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
           Container(

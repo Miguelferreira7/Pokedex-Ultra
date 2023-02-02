@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:pokedex_ultra/dataBase/entity/description_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/moves_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/stats_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
@@ -17,13 +18,12 @@ class PokemonEntity {
   int? weight;
   bool? isDefault;
   bool? isFavorite;
+  bool? isLegendary;
   int? order;
   String? urlSprite;
   int? imagePokemon;
 
-  // final moves = IsarLinks<MovesEntity>();
-  // final types = IsarLinks<TypesEntity>();
-  // final stats = IsarLinks<StatsEntity>();
+  List<DescriptionEntity>? description;
   List<MovesEntity>? moves;
   List<TypesEntity>? types;
   List<StatsEntity>? stats;
