@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
-import 'package:pokedex_ultra/settings/appSettings.dart';
-import 'package:pokedex_ultra/utils/generation_utils.dart';
-import 'package:pokedex_ultra/utils/image_utils.dart';
-import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
-
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
+import 'package:pokedex_ultra/utils/enums/image_utils.dart';
+import 'package:pokedex_ultra/utils/enums/pokedex_selection_enum.dart';
 import '../../pokedex/pages/pokemons_list_page.dart';
 
-class GenerationsModal extends StatelessWidget {
+class HomeGenerationsModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +143,7 @@ class GenerationsModal extends StatelessWidget {
       BuildContext context, Generation generation, PokedexCubitModel state) async {
 
     if (context.read<PokedexCubit>().state.option == PokedexSelectionEnum.ALL_POKEMONS) {
-      await context.read<PokedexCubit>().getPokedexCompleted(generation);
+      await context.read<PokedexCubit>().getPokedexByGeneration(generation);
     }
     Navigator.of(context).pushNamed(PokemonListPage.ROUTE);
   }

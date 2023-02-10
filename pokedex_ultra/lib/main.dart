@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/modules/login/bloc/login_bloc.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/pages/pokemon_details_page.dart';
+import 'package:pokedex_ultra/utils/injection.dart';
 import 'package:pokedex_ultra/utils/themes.dart';
 import 'modules/home_page/bloc/home_page_cubit.dart';
 import 'modules/home_page/pages/home_page.dart';
@@ -14,21 +15,19 @@ import 'modules/login/pages/splash_screen.dart';
 import 'modules/pokedex/pages/pokemons_list_page.dart';
 
 void main() async {
-
+  Injection.initialize();
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
-      MultiBlocProvider(
-        providers: [
-          BlocProvider<LoginCubit>(create: (context) => LoginCubit()),
-          BlocProvider<HomePageCubit>(create: (context) => HomePageCubit()),
-          BlocProvider<PokedexCubit>(create: (context) => PokedexCubit()),
-        ],
-        child: const MyApp(),
-      ),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginCubit>(create: (context) => LoginCubit()),
+        BlocProvider<HomePageCubit>(create: (context) => HomePageCubit()),
+        BlocProvider<PokedexCubit>(create: (context) => PokedexCubit()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 
@@ -37,7 +36,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       title: 'Pokédex Ultra',
       debugShowCheckedModeBanner: false,

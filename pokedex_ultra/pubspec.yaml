@@ -49,6 +49,8 @@ dependencies:
   permission_handler: ^10.2.0
   url_launcher: ^6.1.8
   tutorial_coach_mark: ^1.2.4
+  get_it: ^7.2.0
+  percent_indicator: ^4.2.2
 
 
 dev_dependencies:

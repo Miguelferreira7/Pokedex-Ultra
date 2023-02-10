@@ -26,6 +26,7 @@ class MainTheme {
       background: darkDefaultBackgroundColor,
       error: darkDefaultContrastColor,
       onBackground: darkDefaultBackgroundColor,
+      secondaryContainer: Colors.white,
     );
   }
 
@@ -33,11 +34,10 @@ class MainTheme {
     return TextTheme(
       button: const TextStyle(fontSize: 18, color: Colors.black),
       headline1: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.bold),
+      headline3: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
       bodyText1: const TextStyle(color: Colors.white),
       subtitle2: const TextStyle(color: Colors.white),
       subtitle1: TextStyle(color: Colors.white, fontSize: 14),
-
-
     );
   }
 
@@ -68,7 +68,6 @@ class MainTheme {
         titleTextStyle: const TextStyle(fontSize: 26, color: Colors.white, fontWeight: FontWeight.w400),
         backgroundColor: darkDefaultAppBarBackgroundColor,
         elevation: 0,
-        iconTheme: IconThemeData(color: darkDefaultContrastColor),
         actionsIconTheme: IconThemeData(color: darkDefaultContrastColor));
   }
 }

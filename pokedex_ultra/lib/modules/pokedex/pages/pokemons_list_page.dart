@@ -5,7 +5,7 @@ import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
 import 'package:pokedex_ultra/modules/pokedex/pages/pokemon_details_page.dart';
-import 'package:pokedex_ultra/utils/pokemon_type_utils.dart';
+import 'package:pokedex_ultra/utils/enums/pokemon_type_utils.dart';
 
 class PokemonListPage extends StatelessWidget {
   static final String ROUTE = "/pokemons-list";
@@ -57,12 +57,14 @@ class PokemonListPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPokemonCard(BuildContext context, PokemonEntity pokemon, Color pokemonColor) {
+  Widget _buildPokemonCard(
+      BuildContext context, PokemonEntity pokemon, Color pokemonColor) {
     return Container(
       child: GestureDetector(
         onTap: () async {
           PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
           await _bloc.updateSelectedPokemonOptions(pokemon, pokemonColor);
+          await _bloc.updatePokemonSelectedDescription();
           Navigator.of(context).pushNamed(PokemonDetailsPage.ROUTE);
         },
         child: Container(
@@ -97,9 +99,9 @@ class PokemonListPage extends StatelessWidget {
   }
 
   Color _getColorTypePokemon(List<TypesEntity>? type) {
-    if (type?.length == 2 && type?[0].type == TypeUtilsSelection[TypeUtils.NORMAL] &&
+    if (type?.length == 2 &&
+        type?[0].type == TypeUtilsSelection[TypeUtils.NORMAL] &&
         type?[1].type == TypeUtilsSelection[TypeUtils.FLYING]) {
-
       return GetColorType(type?[1].type);
     } else {
       return GetColorType(type?.first.type);
@@ -138,13 +140,13 @@ class PokemonListPage extends StatelessWidget {
 
     if (pokemon.types != null && pokemon.types!.isNotEmpty) {
       for (int i = 0; i < pokemon.types!.length; i++) {
-
         final typeIndex = pokemon.types![i].type;
         Color TypeColor = GetColorType(typeIndex);
 
         types.add(Container(
           child: Text("$typeIndex".toUpperCase(),
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
+              style:
+                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 11)),
           alignment: Alignment.center,
           margin: const EdgeInsets.only(right: 8),
           width: 62,
@@ -161,8 +163,10 @@ class PokemonListPage extends StatelessWidget {
 
   Widget _buildPokemonImage(BuildContext context, PokemonEntity pokemon) {
     return Container(
-      child: Image.network("${pokemon.urlSprite}",
-      scale: 0.4),
+      child: Hero(
+        tag: 'pokemon-image-${pokemon.number}',
+        child: Image.network("${pokemon.urlSprite}", scale: 0.4),
+      ),
     );
   }
 }

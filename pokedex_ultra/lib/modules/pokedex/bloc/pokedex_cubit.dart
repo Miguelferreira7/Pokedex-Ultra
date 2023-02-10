@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/dataBase/isar.dart';
 import 'package:pokedex_ultra/settings/appSettings.dart';
-import 'package:pokedex_ultra/utils/generation_utils.dart';
-import 'package:pokedex_ultra/utils/pokedex_selection_enum.dart';
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
+import 'package:pokedex_ultra/utils/enums/pokedex_selection_enum.dart';
 import 'pokedex_cubit_actions.dart';
 import 'pokedex_cubit_model.dart';
 
@@ -13,6 +13,7 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
   PokedexCubit() : super(PokedexCubitModel(
     darkTheme: true,
     pokemonList: [],
+    pokemonSelectedDescription: '',
   ));
 
   IsarRepository isar = new IsarRepository();
@@ -23,7 +24,7 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
   }
 
   @override
-  Future<void> getPokedexCompleted(Generation generation) async {
+  Future<void> getPokedexByGeneration(Generation generation) async {
     List<PokemonEntity>? pokemons = await isar.getAllPokemons(generation);
 
     if (pokemons!.isNotEmpty) {
@@ -51,5 +52,12 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
 
     await isar.updatePokemonFavoriteStatus(pokemon);
     emit(state.patchState(pokemonSelected: pokemon));
+  }
+
+  @override
+  Future<void> updatePokemonSelectedDescription() async {
+    String pokemondescription = state.pokemonSelected!.description![0].descriptionText!;
+
+    emit(state.patchState(pokemonSelectedDescription: pokemondescription));
   }
 }

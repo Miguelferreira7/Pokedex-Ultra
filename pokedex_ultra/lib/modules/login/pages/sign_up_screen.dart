@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pokedex_ultra/utils/components/poke-dialog.dart';
 import 'package:pokedex_ultra/utils/components/poke-text-field.dart';
-import 'package:pokedex_ultra/utils/firebase_exception_utils.dart';
+import 'package:pokedex_ultra/utils/enums/firebase_exception_utils.dart';
 
 import '../../home_page/pages/home_page.dart';
 

@@ -22,71 +22,88 @@ const PokemonEntitySchema = CollectionSchema(
       name: r'baseExperience',
       type: IsarType.long,
     ),
-    r'generation': PropertySchema(
+    r'description': PropertySchema(
       id: 1,
+      name: r'description',
+      type: IsarType.objectList,
+      target: r'DescriptionEntity',
+    ),
+    r'evolutionChain': PropertySchema(
+      id: 2,
+      name: r'evolutionChain',
+      type: IsarType.objectList,
+      target: r'EvolutionChainEntity',
+    ),
+    r'generation': PropertySchema(
+      id: 3,
       name: r'generation',
       type: IsarType.long,
     ),
     r'height': PropertySchema(
-      id: 2,
+      id: 4,
       name: r'height',
       type: IsarType.long,
     ),
     r'imagePokemon': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'imagePokemon',
       type: IsarType.long,
     ),
     r'isDefault': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'isDefault',
       type: IsarType.bool,
     ),
     r'isFavorite': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'isFavorite',
       type: IsarType.bool,
     ),
+    r'isLegendary': PropertySchema(
+      id: 8,
+      name: r'isLegendary',
+      type: IsarType.bool,
+    ),
     r'moves': PropertySchema(
-      id: 6,
+      id: 9,
       name: r'moves',
       type: IsarType.objectList,
       target: r'MovesEntity',
     ),
     r'name': PropertySchema(
-      id: 7,
+      id: 10,
       name: r'name',
       type: IsarType.string,
     ),
     r'number': PropertySchema(
-      id: 8,
+      id: 11,
       name: r'number',
       type: IsarType.long,
     ),
     r'order': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'order',
       type: IsarType.long,
     ),
     r'stats': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'stats',
       type: IsarType.objectList,
       target: r'StatsEntity',
     ),
     r'types': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'types',
       type: IsarType.objectList,
       target: r'TypesEntity',
     ),
     r'urlSprite': PropertySchema(
-      id: 12,
+      id: 15,
       name: r'urlSprite',
       type: IsarType.string,
     ),
     r'weight': PropertySchema(
-      id: 13,
+      id: 16,
       name: r'weight',
       type: IsarType.long,
     )
@@ -99,6 +116,8 @@ const PokemonEntitySchema = CollectionSchema(
   indexes: {},
   links: {},
   embeddedSchemas: {
+    r'DescriptionEntity': DescriptionEntitySchema,
+    r'EvolutionChainEntity': EvolutionChainEntitySchema,
     r'MovesEntity': MovesEntitySchema,
     r'TypesEntity': TypesEntitySchema,
     r'StatsEntity': StatsEntitySchema
@@ -115,6 +134,34 @@ int _pokemonEntityEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  {
+    final list = object.description;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[DescriptionEntity]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              DescriptionEntitySchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.evolutionChain;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[EvolutionChainEntity]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += EvolutionChainEntitySchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
   {
     final list = object.moves;
     if (list != null) {
@@ -179,34 +226,47 @@ void _pokemonEntitySerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeLong(offsets[0], object.baseExperience);
-  writer.writeLong(offsets[1], object.generation);
-  writer.writeLong(offsets[2], object.height);
-  writer.writeLong(offsets[3], object.imagePokemon);
-  writer.writeBool(offsets[4], object.isDefault);
-  writer.writeBool(offsets[5], object.isFavorite);
+  writer.writeObjectList<DescriptionEntity>(
+    offsets[1],
+    allOffsets,
+    DescriptionEntitySchema.serialize,
+    object.description,
+  );
+  writer.writeObjectList<EvolutionChainEntity>(
+    offsets[2],
+    allOffsets,
+    EvolutionChainEntitySchema.serialize,
+    object.evolutionChain,
+  );
+  writer.writeLong(offsets[3], object.generation);
+  writer.writeLong(offsets[4], object.height);
+  writer.writeLong(offsets[5], object.imagePokemon);
+  writer.writeBool(offsets[6], object.isDefault);
+  writer.writeBool(offsets[7], object.isFavorite);
+  writer.writeBool(offsets[8], object.isLegendary);
   writer.writeObjectList<MovesEntity>(
-    offsets[6],
+    offsets[9],
     allOffsets,
     MovesEntitySchema.serialize,
     object.moves,
   );
-  writer.writeString(offsets[7], object.name);
-  writer.writeLong(offsets[8], object.number);
-  writer.writeLong(offsets[9], object.order);
+  writer.writeString(offsets[10], object.name);
+  writer.writeLong(offsets[11], object.number);
+  writer.writeLong(offsets[12], object.order);
   writer.writeObjectList<StatsEntity>(
-    offsets[10],
+    offsets[13],
     allOffsets,
     StatsEntitySchema.serialize,
     object.stats,
   );
   writer.writeObjectList<TypesEntity>(
-    offsets[11],
+    offsets[14],
     allOffsets,
     TypesEntitySchema.serialize,
     object.types,
   );
-  writer.writeString(offsets[12], object.urlSprite);
-  writer.writeLong(offsets[13], object.weight);
+  writer.writeString(offsets[15], object.urlSprite);
+  writer.writeLong(offsets[16], object.weight);
 }
 
 PokemonEntity _pokemonEntityDeserialize(
@@ -217,35 +277,48 @@ PokemonEntity _pokemonEntityDeserialize(
 ) {
   final object = PokemonEntity();
   object.baseExperience = reader.readLongOrNull(offsets[0]);
-  object.generation = reader.readLongOrNull(offsets[1]);
-  object.height = reader.readLongOrNull(offsets[2]);
+  object.description = reader.readObjectList<DescriptionEntity>(
+    offsets[1],
+    DescriptionEntitySchema.deserialize,
+    allOffsets,
+    DescriptionEntity(),
+  );
+  object.evolutionChain = reader.readObjectList<EvolutionChainEntity>(
+    offsets[2],
+    EvolutionChainEntitySchema.deserialize,
+    allOffsets,
+    EvolutionChainEntity(),
+  );
+  object.generation = reader.readLongOrNull(offsets[3]);
+  object.height = reader.readLongOrNull(offsets[4]);
   object.id = id;
-  object.imagePokemon = reader.readLongOrNull(offsets[3]);
-  object.isDefault = reader.readBoolOrNull(offsets[4]);
-  object.isFavorite = reader.readBoolOrNull(offsets[5]);
+  object.imagePokemon = reader.readLongOrNull(offsets[5]);
+  object.isDefault = reader.readBoolOrNull(offsets[6]);
+  object.isFavorite = reader.readBoolOrNull(offsets[7]);
+  object.isLegendary = reader.readBoolOrNull(offsets[8]);
   object.moves = reader.readObjectList<MovesEntity>(
-    offsets[6],
+    offsets[9],
     MovesEntitySchema.deserialize,
     allOffsets,
     MovesEntity(),
   );
-  object.name = reader.readStringOrNull(offsets[7]);
-  object.number = reader.readLongOrNull(offsets[8]);
-  object.order = reader.readLongOrNull(offsets[9]);
+  object.name = reader.readStringOrNull(offsets[10]);
+  object.number = reader.readLongOrNull(offsets[11]);
+  object.order = reader.readLongOrNull(offsets[12]);
   object.stats = reader.readObjectList<StatsEntity>(
-    offsets[10],
+    offsets[13],
     StatsEntitySchema.deserialize,
     allOffsets,
     StatsEntity(),
   );
   object.types = reader.readObjectList<TypesEntity>(
-    offsets[11],
+    offsets[14],
     TypesEntitySchema.deserialize,
     allOffsets,
     TypesEntity(),
   );
-  object.urlSprite = reader.readStringOrNull(offsets[12]);
-  object.weight = reader.readLongOrNull(offsets[13]);
+  object.urlSprite = reader.readStringOrNull(offsets[15]);
+  object.weight = reader.readLongOrNull(offsets[16]);
   return object;
 }
 
@@ -259,45 +332,61 @@ P _pokemonEntityDeserializeProp<P>(
     case 0:
       return (reader.readLongOrNull(offset)) as P;
     case 1:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readObjectList<DescriptionEntity>(
+        offset,
+        DescriptionEntitySchema.deserialize,
+        allOffsets,
+        DescriptionEntity(),
+      )) as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readObjectList<EvolutionChainEntity>(
+        offset,
+        EvolutionChainEntitySchema.deserialize,
+        allOffsets,
+        EvolutionChainEntity(),
+      )) as P;
     case 3:
       return (reader.readLongOrNull(offset)) as P;
     case 4:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 5:
-      return (reader.readBoolOrNull(offset)) as P;
+      return (reader.readLongOrNull(offset)) as P;
     case 6:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 7:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 8:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 9:
       return (reader.readObjectList<MovesEntity>(
         offset,
         MovesEntitySchema.deserialize,
         allOffsets,
         MovesEntity(),
       )) as P;
-    case 7:
-      return (reader.readStringOrNull(offset)) as P;
-    case 8:
-      return (reader.readLongOrNull(offset)) as P;
-    case 9:
-      return (reader.readLongOrNull(offset)) as P;
     case 10:
+      return (reader.readStringOrNull(offset)) as P;
+    case 11:
+      return (reader.readLongOrNull(offset)) as P;
+    case 12:
+      return (reader.readLongOrNull(offset)) as P;
+    case 13:
       return (reader.readObjectList<StatsEntity>(
         offset,
         StatsEntitySchema.deserialize,
         allOffsets,
         StatsEntity(),
       )) as P;
-    case 11:
+    case 14:
       return (reader.readObjectList<TypesEntity>(
         offset,
         TypesEntitySchema.deserialize,
         allOffsets,
         TypesEntity(),
       )) as P;
-    case 12:
+    case 15:
       return (reader.readStringOrNull(offset)) as P;
-    case 13:
+    case 16:
       return (reader.readLongOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -471,6 +560,220 @@ extension PokemonEntityQueryFilter
         upper: upper,
         includeUpper: includeUpper,
       ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'description',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'description',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'evolutionChain',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'evolutionChain',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'evolutionChain',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
     });
   }
 
@@ -801,6 +1104,34 @@ extension PokemonEntityQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isFavorite',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isLegendaryIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isLegendary',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isLegendaryIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isLegendary',
+      ));
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      isLegendaryEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isLegendary',
         value: value,
       ));
     });
@@ -1660,6 +1991,20 @@ extension PokemonEntityQueryFilter
 extension PokemonEntityQueryObject
     on QueryBuilder<PokemonEntity, PokemonEntity, QFilterCondition> {
   QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      descriptionElement(FilterQuery<DescriptionEntity> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'description');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
+      evolutionChainElement(FilterQuery<EvolutionChainEntity> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'evolutionChain');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterFilterCondition>
       movesElement(FilterQuery<MovesEntity> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'moves');
@@ -1762,6 +2107,19 @@ extension PokemonEntityQuerySortBy
       sortByIsFavoriteDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> sortByIsLegendary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLegendary', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      sortByIsLegendaryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLegendary', Sort.desc);
     });
   }
 
@@ -1920,6 +2278,19 @@ extension PokemonEntityQuerySortThenBy
     });
   }
 
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> thenByIsLegendary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLegendary', Sort.asc);
+    });
+  }
+
+  QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy>
+      thenByIsLegendaryDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isLegendary', Sort.desc);
+    });
+  }
+
   QueryBuilder<PokemonEntity, PokemonEntity, QAfterSortBy> thenByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -2022,6 +2393,13 @@ extension PokemonEntityQueryWhereDistinct
     });
   }
 
+  QueryBuilder<PokemonEntity, PokemonEntity, QDistinct>
+      distinctByIsLegendary() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isLegendary');
+    });
+  }
+
   QueryBuilder<PokemonEntity, PokemonEntity, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2069,6 +2447,20 @@ extension PokemonEntityQueryProperty
     });
   }
 
+  QueryBuilder<PokemonEntity, List<DescriptionEntity>?, QQueryOperations>
+      descriptionProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'description');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, List<EvolutionChainEntity>?, QQueryOperations>
+      evolutionChainProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'evolutionChain');
+    });
+  }
+
   QueryBuilder<PokemonEntity, int?, QQueryOperations> generationProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'generation');
@@ -2096,6 +2488,12 @@ extension PokemonEntityQueryProperty
   QueryBuilder<PokemonEntity, bool?, QQueryOperations> isFavoriteProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'isFavorite');
+    });
+  }
+
+  QueryBuilder<PokemonEntity, bool?, QQueryOperations> isLegendaryProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isLegendary');
     });
   }
 

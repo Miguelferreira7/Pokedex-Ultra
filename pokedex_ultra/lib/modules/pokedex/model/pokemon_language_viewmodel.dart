@@ -7,7 +7,7 @@ class PokemonLanguageViewModel {
     this.url
 });
 
-  static PokemonLanguageViewModel fromJson(Map<String, dynamic> json) {
+  factory PokemonLanguageViewModel.fromJson(Map<String, dynamic> json) {
     return new PokemonLanguageViewModel(
       name: json['name'],
       url: json['url'],

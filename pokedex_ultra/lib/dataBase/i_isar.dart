@@ -1,6 +1,6 @@
 import 'package:isar/isar.dart';
 
-import '../utils/generation_utils.dart';
+import '../utils/enums/generation_utils.dart';
 import 'entity/pokemon_entity.dart';
 
 abstract class IIsarRepository {

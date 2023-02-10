@@ -9,7 +9,7 @@ import 'package:pokedex_ultra/dataBase/entity/stats_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
 import 'package:pokedex_ultra/dataBase/isar.dart';
 import 'package:pokedex_ultra/modules/pokedex/model/pokemon_species_viewmodel.dart';
-import 'package:pokedex_ultra/utils/generation_utils.dart';
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
 
 class AppSettings {
   PokemonService service = new PokemonService();
@@ -88,12 +88,14 @@ class AppSettings {
         List<TypesEntity> typesEntity = await _createTypesEntity(pokemons[i]?.types);
         List<MovesEntity> movesEntity = await _createMovesEntity(pokemons[i]?.moves);
         List<StatsEntity> statsEntity = await _createStatsEntity(pokemons[i]?.stats);
-        List<DescriptionEntity> pokemonDescription = await _getPokemonDescription(pokemonSpecies);
+        List<DescriptionEntity> descriptionEntity = await _getPokemonDescription(pokemonSpecies);
 
         pokemonEntities.add(new PokemonEntity()
           ..stats = statsEntity
           ..moves = movesEntity
           ..types = typesEntity
+          ..description = descriptionEntity
+          ..evolutionChain = null
           ..generation = generation
           ..imagePokemon = 0
           ..isFavorite = false
@@ -165,9 +167,10 @@ class AppSettings {
   Future<List<DescriptionEntity>> _getPokemonDescription(PokemonSpeciesViewModel? pokemonSpecies) async {
     List<DescriptionEntity> descriptionsList = [];
 
-    if (pokemonSpecies != null && pokemonSpecies.flavorTextEntries!.isNotEmpty) {
+    if (pokemonSpecies != null && pokemonSpecies.flavorTextEntries != null || pokemonSpecies!.flavorTextEntries!.isNotEmpty) {
       for (int i = 0; i < pokemonSpecies.flavorTextEntries!.length; i++) {
-        if (pokemonSpecies.flavorTextEntries![i].language == 'en') {
+        if (pokemonSpecies.flavorTextEntries![i].language!.name == 'en'
+            && pokemonSpecies.flavorTextEntries![i].version!.name == "omega-ruby") {
           descriptionsList.add(new DescriptionEntity()
               ..descriptionText = pokemonSpecies.flavorTextEntries![i].flavorText
               ..language = pokemonSpecies.flavorTextEntries![i].language!.name

@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:pokedex_ultra/dataBase/entity/description_entity.dart';
+import 'package:pokedex_ultra/dataBase/entity/evolution_chain_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/moves_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/stats_entity.dart';
 import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
@@ -24,6 +25,7 @@ class PokemonEntity {
   int? imagePokemon;
 
   List<DescriptionEntity>? description;
+  List<EvolutionChainEntity>? evolutionChain;
   List<MovesEntity>? moves;
   List<TypesEntity>? types;
   List<StatsEntity>? stats;

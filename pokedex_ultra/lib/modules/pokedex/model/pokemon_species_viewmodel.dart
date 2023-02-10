@@ -3,19 +3,22 @@ import 'package:pokedex_ultra/modules/pokedex/model/pokemon_flavor_text_entries_
 class PokemonSpeciesViewModel {
 
   List<PokemonFlavorTextEntriesViewModel>? flavorTextEntries ;
+  String? evolutionChainUrl;
   bool? isLegendary;
 
   PokemonSpeciesViewModel({
     this.isLegendary,
-    this.flavorTextEntries
+    this.flavorTextEntries,
+    this.evolutionChainUrl
   });
 
-  static PokemonSpeciesViewModel fromJson(Map<String, dynamic> json) {
+  factory PokemonSpeciesViewModel.fromJson(Map<String, dynamic> json) {
     return new PokemonSpeciesViewModel(
       isLegendary: json['is_legendary'],
-      flavorTextEntries: (json["flavor_text_entries"] == null)
-          ? [] : (json["flavor_text_entries"] as List).map((x) =>
-          PokemonFlavorTextEntriesViewModel.fromJson(x)).toList(),
+      evolutionChainUrl: json['evolution_chain']['url'],
+      flavorTextEntries: (json["flavor_text_entries"] != null)
+          ? (json["flavor_text_entries"] as List).map((x) =>
+          PokemonFlavorTextEntriesViewModel.fromJson(x)).toList() : [],
     );
   }
 }

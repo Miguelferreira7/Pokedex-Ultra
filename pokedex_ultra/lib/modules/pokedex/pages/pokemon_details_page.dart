@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
-import 'package:pokedex_ultra/utils/pokemon_type_utils.dart';
+import 'package:pokedex_ultra/modules/pokedex/pages/pokemon_detail_tab_bar.dart';
+import 'package:pokedex_ultra/utils/enums/image_utils.dart';
+import 'package:pokedex_ultra/utils/enums/pokemon_type_utils.dart';
 
 class PokemonDetailsPage extends StatelessWidget {
   const PokemonDetailsPage({Key? key}) : super(key: key);
@@ -15,15 +17,33 @@ class PokemonDetailsPage extends StatelessWidget {
     return BlocBuilder<PokedexCubit, PokedexCubitModel>(
       builder: (context, state) {
         final pokemon = state.pokemonSelected!;
-        return Scaffold(
-          appBar: AppBar(
-            backgroundColor: state.pokemonSelectedColor,
-            title: Text(
-              "${pokemon.name!.toUpperCase()}",
-              style: TextStyle(fontWeight: FontWeight.bold),
+        return DefaultTabController(
+          initialIndex: 0,
+          length: 4,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: state.pokemonSelectedColor,
+              centerTitle: false,
+              title: Text(
+                "${pokemon.name?.toUpperCase()}",
+                style: Theme.of(context).textTheme.headline1,
+              ),
+              actions: [
+                Container(
+                  padding: const EdgeInsets.only(right: 16),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "#${pokemon.number}",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2
+                        ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                )
+              ],
             ),
+            body: _buildBody(context, pokemon, state.pokemonSelectedColor),
           ),
-          body: _buildBody(context, pokemon, state.pokemonSelectedColor),
         );
       },
     );
@@ -32,36 +52,13 @@ class PokemonDetailsPage extends StatelessWidget {
   Widget _buildBody(
       BuildContext context, PokemonEntity pokemon, Color? pokemonColor) {
     return Card(
+      color: Theme.of(context).colorScheme.background,
       margin: EdgeInsets.zero,
       child: Container(
-        color: Colors.transparent,
+        height: MediaQuery.of(context).size.height,
         child: Stack(
           children: [
-            Container(
-              padding: const EdgeInsets.fromLTRB(0, 25, 10, 20),
-              height: MediaQuery.of(context).size.height * 1,
-              width: MediaQuery.of(context).size.width * 1,
-              alignment: Alignment.center,
-              color: Colors.transparent,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(
-                    children: _buildPokemonTypes(pokemon, pokemonColor),
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  ),
-                  _buildPokemonDescription(pokemon, pokemonColor),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildPokemonWeightCard(pokemon.weight),
-                      _buildPokemonHeightCard(pokemon.height),
-                    ],
-                  )
-                ],
-              ),
-            ),
+            _buildTabView(context, pokemon, pokemonColor!),
             _buildBackgroundImage(context, pokemonColor),
             _buildFavoriteButton(context, pokemon),
             _buildPokemonImage(context, pokemon)
@@ -71,20 +68,39 @@ class PokemonDetailsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildTabView(
+      BuildContext context, PokemonEntity pokemon, Color pokemonColor) {
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Row(
+            children: _buildPokemonTypes(pokemon, pokemonColor),
+            mainAxisAlignment: MainAxisAlignment.center,
+          ),
+          _buildTabViewTitles(context, pokemonColor),
+          PokemonTabBarView(),
+        ],
+      ),
+    );
+  }
+
   Widget _buildFavoriteButton(BuildContext context, PokemonEntity pokemon) {
     return Positioned(
       top: MediaQuery.of(context).size.height * 0.27,
-      right: MediaQuery.of(context).size.width / 18,
-      child: GestureDetector(
-        child: Icon(
-          size: 30,
+      right: MediaQuery.of(context).size.width / 16,
+      child: IconButton(
+
+        icon: Icon(
           Icons.favorite,
+          size: 30,
           color: pokemon.isFavorite == true ? Colors.red : Colors.grey,
         ),
-        onTap: () {
+        onPressed: () {
           PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
           _bloc.updatePokemonfavoriteStatus();
-        }),
+        },
+      ),
     );
   }
 
@@ -113,31 +129,33 @@ class PokemonDetailsPage extends StatelessWidget {
     return listTypesWidgets;
   }
 
-  Widget _buildPokemonDescription(PokemonEntity pokemon, Color? pokemonColor) {
-    return Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 12),
-        child: Text(
-          "Special informations",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: pokemonColor,
-          ),
-        ));
+  Widget _buildTabViewTitles(BuildContext context, Color? pokemonColor) {
+    TextStyle? tabTextStyle =
+        Theme.of(context).textTheme.headline3?.copyWith(color: pokemonColor);
+
+    return TabBar(
+        padding: const EdgeInsets.only(top: 8),
+        indicatorPadding: EdgeInsets.only(bottom: 8),
+        indicatorSize: TabBarIndicatorSize.label,
+        indicator: UnderlineTabIndicator(),
+        tabs: [
+          Tab(child: Text("About", style: tabTextStyle)),
+          Tab(child: Text("Stats", style: tabTextStyle)),
+          Tab(child: Text("Moves", style: tabTextStyle)),
+          Tab(child: Text("Evolutions", style: tabTextStyle))
+        ]);
   }
 
   Widget _buildBackgroundImage(context, Color? pokemonColor) {
     return Container(
-      margin: EdgeInsets.all(0),
       height: 180,
       width: double.infinity,
       decoration: BoxDecoration(
         color: pokemonColor,
       ),
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Image.asset(
-          'assets/Pokeball.png',
+          ImageUtilsSelection[ImageUtils.POKEBALL]!,
           color: const Color.fromRGBO(255, 255, 255, 0.1),
           alignment: Alignment.topRight,
         ),
@@ -145,56 +163,18 @@ class PokemonDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildPokemonHeightCard(int? pokeHeight) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(50, 0, 5, 5),
-          child: Text('$pokeHeight m',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        ),
-        Container(
-          padding: EdgeInsets.fromLTRB(50, 0, 5, 5),
-          child: Text('Height',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
-        )
-      ],
-    );
-  }
-
-  Widget _buildPokemonWeightCard(int? pokeWeight) {
-
-    return Container(
-      decoration: BoxDecoration(),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 5, 5),
-            child: Text('${pokeWeight} kg',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(0, 0, 5, 5),
-            child: Text('Weight',
-                style: TextStyle(fontSize: 13, fontWeight: FontWeight.w400)),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _buildPokemonImage(context, PokemonEntity pokemon) {
     return Positioned(
-      top: MediaQuery.of(context).size.height * 0.02,
+      top: MediaQuery.of(context).size.height * .001,
       right: MediaQuery.of(context).size.width / 3.66,
-      child: Image.network(
-        '${pokemon.urlSprite}',
-        height: MediaQuery.of(context).size.height * 0.42,
-        width: MediaQuery.of(context).size.width * 0.48,
-        scale: 0.048,
-
+      child: Hero(
+        tag: 'pokemon-image-${pokemon.number}',
+        child: Image.network(
+          '${pokemon.urlSprite}',
+          height: MediaQuery.of(context).size.height * 0.42,
+          width: MediaQuery.of(context).size.width * 0.48,
+          scale: 0.048,
+        ),
       ),
     );
   }

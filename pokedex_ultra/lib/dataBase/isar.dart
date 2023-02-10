@@ -1,7 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
 import 'package:pokedex_ultra/dataBase/i_isar.dart';
-import 'package:pokedex_ultra/utils/generation_utils.dart';
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
 
 
 class IsarRepository implements IIsarRepository{
