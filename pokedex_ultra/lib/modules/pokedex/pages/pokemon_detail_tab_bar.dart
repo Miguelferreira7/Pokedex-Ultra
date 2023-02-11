@@ -111,27 +111,30 @@ class PokemonTabBarView extends StatelessWidget {
     );
   }
 
-  Widget _buildStatsTabBarView(BuildContext context, PokemonEntity pokemon, PokedexCubitModel state) {
+  Widget _buildStatsTabBarView(
+      BuildContext context, PokemonEntity pokemon, PokedexCubitModel state) {
     return Container(
+      width: MediaQuery.of(context).size.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 150,
+            width: MediaQuery.of(context).size.width * .35,
             child: Column(
-              children: _buildLabelStats(pokemon.stats),
+              children: _buildLabelStats(context, pokemon.stats),
             ),
           ),
           Container(
-            width: 50,
+            width: 25,
             child: Column(
-              children: _buildValueStats(pokemon.stats),
+              children: _buildValueStats(context, pokemon.stats),
             ),
           ),
           Container(
-            width: 150,
+            width: MediaQuery.of(context).size.width * .5,
             child: Column(
-              children: _buildLinearPercentIndicatorStats(pokemon.stats, state),
+              children: _buildLinearPercentIndicatorStats(
+                  context, pokemon.stats, state),
             ),
           )
         ],
@@ -139,45 +142,54 @@ class PokemonTabBarView extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildLabelStats(List<StatsEntity>? pokemonStats) {
+  List<Widget> _buildLabelStats(
+      BuildContext context, List<StatsEntity>? pokemonStats) {
     List<Widget> stats = [];
 
     pokemonStats!.forEach((element) {
       stats.add(Container(
+          height: MediaQuery.of(context).size.width * .05,
           margin: const EdgeInsets.only(top: 8, bottom: 8),
           alignment: Alignment.centerLeft,
-          child: Text("${element.name!.toUpperCase()}", textAlign: TextAlign.left)));
+          child: Text("${element.name!.toUpperCase()}",
+              textAlign: TextAlign.left)));
     });
 
     return stats;
   }
 
-  List<Widget> _buildValueStats(List<StatsEntity>? pokemonStats) {
+  List<Widget> _buildValueStats(
+      BuildContext context, List<StatsEntity>? pokemonStats) {
     List<Widget> stats = [];
 
     pokemonStats!.forEach((element) {
       stats.add(Container(
+        height: MediaQuery.of(context).size.width * .05,
         margin: const EdgeInsets.only(top: 8, bottom: 8),
         alignment: Alignment.center,
-        child: Text("${element.baseStat}", textAlign: TextAlign.left),
+        child: Text(
+          "${element.baseStat}",
+          textAlign: TextAlign.left,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ));
     });
 
     return stats;
   }
 
-  List<Widget> _buildLinearPercentIndicatorStats(
+  List<Widget> _buildLinearPercentIndicatorStats(BuildContext context,
       List<StatsEntity>? pokemonStats, PokedexCubitModel state) {
     List<Widget> stats = [];
 
     pokemonStats!.forEach((element) {
       stats.add(Container(
-        margin: const EdgeInsets.only(top: 8, bottom: 8),
-        alignment: Alignment.center,
+        height: MediaQuery.of(context).size.width * .05,
+        margin: const EdgeInsets.only(top: 8, bottom: 8, left: 8),
         child: LinearPercentIndicator(
           progressColor: state.pokemonSelectedColor!,
           barRadius: Radius.circular(8),
-          width: 150,
+          width: MediaQuery.of(context).size.width * .47,
           percent: 0.5,
           lineHeight: 16.0,
         ),

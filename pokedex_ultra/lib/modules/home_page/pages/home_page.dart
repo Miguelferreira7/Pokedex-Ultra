@@ -35,39 +35,60 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(BuildContext context, HomePageCubitModel state) {
-    return Container(
-      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            children: [
-              _buildWelcomeMessage(context),
-              _buildMenuContainer(context),
-            ],
-          ),
-          Column(
-            children: [
-              _buildNews(context, state),
-            ],
-          )
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.9,
+        padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                _buildWelcomeMessage(context),
+                _buildMenuContainer(context),
+              ],
+            ),
+            // Center(
+            //   child: Image.asset(
+            //     ImageUtilsSelection[ImageUtils.LOGO_WITH_NAME]!,
+            //     scale: 1.4,
+            //   ),
+            // ),
+            Column(
+              children: [
+                _buildNews(context, state),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildWelcomeMessage(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(left: 16),
-      margin: const EdgeInsets.only(bottom: 16, top: 16),
-      alignment: Alignment.centerLeft,
-      height: MediaQuery.of(context).size.height * 0.08,
-      child: Container(
-        child: Text(
-          "Welcome,\n${FirebaseAuth.instance.currentUser?.displayName?.toUpperCase()}!",
-          style: Theme.of(context).textTheme.headline1,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(
+          padding: const EdgeInsets.only(left: 16),
+          margin: const EdgeInsets.only(bottom: 16, top: 16),
+          alignment: Alignment.centerLeft,
+          height: MediaQuery.of(context).size.height * 0.08,
+          child: Container(
+            child: Text(
+              "Welcome,\n${FirebaseAuth.instance.currentUser?.displayName?.toUpperCase()}!",
+              style: Theme.of(context).textTheme.headline1,
+            ),
+          ),
         ),
-      ),
+        Container(
+          margin: const EdgeInsets.only(left: 16, right: 16),
+          child: Image.asset(
+            ImageUtilsSelection[ImageUtils.LOGO_WITH_NAME]!,
+            scale: 3,
+          ),
+        )
+      ],
     );
   }
 

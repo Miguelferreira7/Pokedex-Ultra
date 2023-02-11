@@ -167,7 +167,7 @@ class AppSettings {
   Future<List<DescriptionEntity>> _getPokemonDescription(PokemonSpeciesViewModel? pokemonSpecies) async {
     List<DescriptionEntity> descriptionsList = [];
 
-    if (pokemonSpecies != null && pokemonSpecies.flavorTextEntries != null || pokemonSpecies!.flavorTextEntries!.isNotEmpty) {
+    if (pokemonSpecies != null && pokemonSpecies.flavorTextEntries != null && pokemonSpecies!.flavorTextEntries!.isNotEmpty) {
       for (int i = 0; i < pokemonSpecies.flavorTextEntries!.length; i++) {
         if (pokemonSpecies.flavorTextEntries![i].language!.name == 'en'
             && pokemonSpecies.flavorTextEntries![i].version!.name == "omega-ruby") {

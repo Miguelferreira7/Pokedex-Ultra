@@ -64,7 +64,7 @@ class _HomePokedexSelectionModalState extends State<HomePokedexSelectionModal> {
                   onTap: () {
                     Navigator.of(context).pop();
                     BlocProvider.of<PokedexCubit>(context)
-                        .setPokedexOrFavoritesSelected(
+                        .updatePokedexOrFavoritesSelected(
                       PokedexSelectionEnum.ALL_POKEMONS,
                     );
                     _buildGenerationsModal(context);
@@ -89,6 +89,14 @@ class _HomePokedexSelectionModalState extends State<HomePokedexSelectionModal> {
                   ),
                 ),
                 GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    BlocProvider.of<PokedexCubit>(context)
+                        .updatePokedexOrFavoritesSelected(
+                      PokedexSelectionEnum.FAVORITES_POKEMONS,
+                    );
+                    _buildGenerationsModal(context);
+                  },
                   key: keyTutorial3,
                   child: Container(
                     alignment: Alignment.center,

@@ -5,6 +5,8 @@ import 'package:pokedex_ultra/dataBase/entity/types_entity.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit.dart';
 import 'package:pokedex_ultra/modules/pokedex/bloc/pokedex_cubit_model.dart';
 import 'package:pokedex_ultra/modules/pokedex/pages/pokemon_details_page.dart';
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
+import 'package:pokedex_ultra/utils/enums/pokedex_selection_enum.dart';
 import 'package:pokedex_ultra/utils/enums/pokemon_type_utils.dart';
 
 class PokemonListPage extends StatelessWidget {
@@ -29,10 +31,39 @@ class PokemonListPage extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, PokedexCubitModel state) {
-    if (state.pokemonList != null || state.pokemonList!.isNotEmpty) {
+    if (state.pokemonList != null && state.pokemonList!.isNotEmpty) {
       return _buildListViewPokemons(context, state);
     } else {
-      return Container();
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              "You don't have add any pokemon to you pokédex yet, start adding right now!",
+              style:
+                  Theme.of(context).textTheme.headline1!.copyWith(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            TextButton(
+                onPressed: () async {
+                  PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
+                  _bloc.updatePokedexOrFavoritesSelected(PokedexSelectionEnum.ALL_POKEMONS);
+                  await _bloc.getPokedexByGeneration(state.generationSelected as Generation);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(PokemonListPage.ROUTE);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("See all Pokémons", style: TextStyle(color: Colors.yellow),),
+                    Padding(padding: const EdgeInsets.only(left: 8)),
+                    Icon(Icons.arrow_forward, color: Colors.yellow)
+                  ],
+                ))
+          ],
+        ),
+      );
     }
   }
 
@@ -59,43 +90,54 @@ class PokemonListPage extends StatelessWidget {
 
   Widget _buildPokemonCard(
       BuildContext context, PokemonEntity pokemon, Color pokemonColor) {
-    return Container(
-      child: GestureDetector(
-        onTap: () async {
-          PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
-          await _bloc.updateSelectedPokemonOptions(pokemon, pokemonColor);
-          await _bloc.updatePokemonSelectedDescription();
-          Navigator.of(context).pushNamed(PokemonDetailsPage.ROUTE);
-        },
-        child: Container(
-          padding: const EdgeInsets.only(left: 16),
-          margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-          height: MediaQuery.of(context).size.height * 0.14,
-          width: MediaQuery.of(context).size.width * 0.4,
-          decoration: BoxDecoration(
-            color: pokemonColor.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(9),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildPokemonNumber(context, pokemon.number),
-                    _buildPokemonName(context, pokemon.name, pokemonColor),
-                    Row(children: _buildPokemonTypesContainer(context, pokemon))
-                  ],
+    return BlocBuilder<PokedexCubit, PokedexCubitModel>(
+        builder: (context, state) {
+      return Container(
+        child: GestureDetector(
+          onTap: () async {
+            PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
+            await _bloc.updateSelectedPokemonOptions(pokemon, pokemonColor);
+            await _bloc.updatePokemonSelectedDescription();
+
+            await Navigator.of(context).pushNamed(PokemonDetailsPage.ROUTE);
+
+            if (state.option == PokedexSelectionEnum.FAVORITES_POKEMONS) {
+              _bloc.getPokedexByGeneration(
+                  state.generationSelected as Generation);
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.only(left: 16),
+            margin: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+            height: MediaQuery.of(context).size.height * 0.14,
+            width: MediaQuery.of(context).size.width * 0.4,
+            decoration: BoxDecoration(
+              color: pokemonColor.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(9),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildPokemonNumber(context, pokemon.number),
+                      _buildPokemonName(context, pokemon.name, pokemonColor),
+                      Row(
+                          children:
+                              _buildPokemonTypesContainer(context, pokemon))
+                    ],
+                  ),
                 ),
-              ),
-              _buildPokemonImage(context, pokemon)
-            ],
+                _buildPokemonImage(context, pokemon)
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Color _getColorTypePokemon(List<TypesEntity>? type) {

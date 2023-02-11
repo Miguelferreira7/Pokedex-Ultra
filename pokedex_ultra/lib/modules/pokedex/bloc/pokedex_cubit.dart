@@ -19,7 +19,7 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
   IsarRepository isar = new IsarRepository();
 
   @override
-  void setPokedexOrFavoritesSelected(PokedexSelectionEnum option) {
+  void updatePokedexOrFavoritesSelected(PokedexSelectionEnum option) {
     emit(state.patchState(option: option));
   }
 
@@ -28,11 +28,21 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
     List<PokemonEntity>? pokemons = await isar.getAllPokemons(generation);
 
     if (pokemons!.isNotEmpty) {
+      if (state.option == PokedexSelectionEnum.FAVORITES_POKEMONS) {
+        pokemons = pokemons.where((element) => element.isFavorite == true).toList();
+        emit(state.patchState(pokemonList: pokemons));
+
+      }
       emit(state.patchState(pokemonList: pokemons));
+
     } else {
       AppSettings appSettings = new AppSettings();
       pokemons = await appSettings.searchPokemonsByGeneration(generation);
 
+      if (state.option == PokedexSelectionEnum.FAVORITES_POKEMONS) {
+        pokemons = pokemons.where((element) => element.isFavorite == true).toList();
+        emit(state.patchState(pokemonList: pokemons));
+      }
       emit(state.patchState(pokemonList: pokemons));
     }
   }
@@ -43,6 +53,11 @@ class PokedexCubit extends Cubit<PokedexCubitModel> implements PokedexCubitActio
         pokemonSelected: pokemonSelected,
         pokemonSelectedColor: pokemonColor
     ));
+  }
+
+  @override
+  void updateGenerationSelected(Generation? generationSelected)  {
+    emit(state.patchState(generationSelected: generationSelected));
   }
 
   @override

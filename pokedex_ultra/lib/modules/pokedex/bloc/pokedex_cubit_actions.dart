@@ -6,7 +6,7 @@ import '../../../utils/enums/pokedex_selection_enum.dart';
 
 abstract class PokedexCubitActions{
 
-  void setPokedexOrFavoritesSelected(PokedexSelectionEnum option);
+  void updatePokedexOrFavoritesSelected(PokedexSelectionEnum option);
 
   Future<void> getPokedexByGeneration(Generation generation);
 
@@ -14,8 +14,8 @@ abstract class PokedexCubitActions{
 
   void updatePokemonfavoriteStatus();
 
-  Future<void> updatePokemonSelectedDescription();
+  void updateGenerationSelected(Generation generationSelected);
 
-  Future<void> updatePokemonSelectedStats();
+  Future<void> updatePokemonSelectedDescription();
 
 }

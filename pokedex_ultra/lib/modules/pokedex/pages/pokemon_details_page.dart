@@ -16,6 +16,10 @@ class PokemonDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<PokedexCubit, PokedexCubitModel>(
       builder: (context, state) {
+
+        PokedexCubit _bloc = BlocProvider.of<PokedexCubit>(context);
+
+
         final pokemon = state.pokemonSelected!;
         return DefaultTabController(
           initialIndex: 0,

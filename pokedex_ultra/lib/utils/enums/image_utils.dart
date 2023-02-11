@@ -16,7 +16,9 @@ enum ImageUtils {
   TREECKO,
   CHIMCHAR,
   PIPLUP,
-  TURTWIG
+  TURTWIG,
+  LOGO,
+  LOGO_WITH_NAME
 }
 
 const Map<ImageUtils, String> ImageUtilsSelection = {
@@ -38,4 +40,6 @@ const Map<ImageUtils, String> ImageUtilsSelection = {
   ImageUtils.PIPLUP: 'assets/piplup.png',
   ImageUtils.TURTWIG: 'assets/turtwig.png',
   ImageUtils.CYNDAQUIL: 'assets/cyndaquil.png',
+  ImageUtils.LOGO: 'assets/logo.png',
+  ImageUtils.LOGO_WITH_NAME: 'assets/logo_with_name.png'
 };

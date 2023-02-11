@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:pokedex_ultra/dataBase/entity/pokemon_entity.dart';
+import 'package:pokedex_ultra/utils/enums/generation_utils.dart';
 import 'package:pokedex_ultra/utils/enums/pokedex_selection_enum.dart';
 
 class PokedexCubitModel {
   bool? darkTheme;
   List<PokemonEntity>? pokemonList;
   PokedexSelectionEnum? option;
+  Generation? generationSelected;
   PokemonEntity? pokemonSelected;
   Color? pokemonSelectedColor;
   String? pokemonSelectedDescription;
@@ -16,7 +18,8 @@ class PokedexCubitModel {
     this.option,
     this.pokemonSelected,
     this.pokemonSelectedColor,
-    this.pokemonSelectedDescription
+    this.pokemonSelectedDescription,
+    this.generationSelected
   });
 
   PokedexCubitModel patchState({
@@ -25,7 +28,8 @@ class PokedexCubitModel {
     PokedexSelectionEnum? option,
     PokemonEntity? pokemonSelected,
     Color? pokemonSelectedColor,
-    String? pokemonSelectedDescription
+    String? pokemonSelectedDescription,
+    Generation? generationSelected
   }) {
 
     return PokedexCubitModel(
@@ -34,7 +38,8 @@ class PokedexCubitModel {
       option: option ?? this.option,
       pokemonSelected: pokemonSelected ?? this.pokemonSelected,
       pokemonSelectedColor: pokemonSelectedColor ?? this.pokemonSelectedColor,
-      pokemonSelectedDescription: pokemonSelectedDescription?? this.pokemonSelectedDescription
+      pokemonSelectedDescription: pokemonSelectedDescription?? this.pokemonSelectedDescription,
+      generationSelected: generationSelected ?? this.generationSelected
     );
   }
 }
